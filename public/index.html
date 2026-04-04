@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Code Factory</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero">
+        <div>
+          <p class="eyebrow">Code Factory</p>
+          <h1 data-testid="page-title">Orchestrated Delivery Harness</h1>
+          <p class="hero-copy">
+            Define a system, break it into branch-sized work, run role-specific agent loops, and watch
+            the plan move in real time.
+          </p>
+        </div>
+        <div class="hero-status" data-testid="connection-indicator">
+          <span class="status-dot"></span>
+          <span id="connection-label">Connecting</span>
+        </div>
+      </section>
+
+      <section class="grid">
+        <aside class="panel intake-panel">
+          <div class="panel-header">
+            <p class="section-kicker">Session</p>
+            <h2>Create Or Select</h2>
+          </div>
+
+          <label class="field">
+            <span>Existing sessions</span>
+            <select id="session-select" data-testid="session-select"></select>
+          </label>
+
+          <div class="button-row">
+            <button id="start-session" class="primary" data-testid="start-session">Start</button>
+            <button id="reset-session" class="ghost" data-testid="reset-session">Reset</button>
+          </div>
+
+          <form id="session-form" class="session-form">
+            <label class="field">
+              <span>Project type</span>
+              <select id="project-type" name="projectType" data-testid="project-type"></select>
+            </label>
+
+            <label class="field">
+              <span>Synthetic scenario</span>
+              <select id="synthetic-user" data-testid="synthetic-user"></select>
+            </label>
+
+            <label class="field">
+              <span>Agent backend</span>
+              <select id="agent-backend" name="agentBackendId" data-testid="agent-backend"></select>
+            </label>
+
+            <label class="field">
+              <span>Branch mode</span>
+              <select id="branch-mode" name="branchMode" data-testid="branch-mode">
+                <option value="plan-only">Plan only</option>
+                <option value="create-local">Create local worktrees</option>
+              </select>
+            </label>
+
+            <label class="field">
+              <span>System name</span>
+              <input id="system-name" name="systemName" data-testid="system-name" required />
+            </label>
+
+            <label class="field">
+              <span>Desired outcome</span>
+              <textarea id="desired-outcome" name="desiredOutcome" rows="4" data-testid="desired-outcome"></textarea>
+            </label>
+
+            <label class="field">
+              <span>Constraints</span>
+              <textarea id="constraints" name="constraints" rows="4" data-testid="constraints"></textarea>
+            </label>
+
+            <label class="field">
+              <span>Functions or services</span>
+              <textarea
+                id="functions-or-services"
+                name="functionsOrServices"
+                rows="8"
+                data-testid="functions-or-services"
+              ></textarea>
+            </label>
+
+            <button class="primary" type="submit" data-testid="create-session">Create Session</button>
+          </form>
+        </aside>
+
+        <section class="main-column">
+          <div class="panel session-summary">
+            <div class="panel-header">
+              <p class="section-kicker">Current session</p>
+              <h2 id="session-title" data-testid="session-title">No session selected</h2>
+            </div>
+
+            <div class="summary-grid" id="summary-grid" data-testid="summary-grid"></div>
+
+            <div class="protocol-strip" id="protocol-strip" data-testid="protocol-strip"></div>
+          </div>
+
+          <div class="panel split-panel">
+            <div class="work-items-pane">
+              <div class="panel-header">
+                <p class="section-kicker">Plan</p>
+                <h2>Work Items</h2>
+              </div>
+              <div id="work-items" class="work-items" data-testid="work-items"></div>
+            </div>
+
+            <div class="detail-pane">
+              <div class="panel-header">
+                <p class="section-kicker">Artifacts</p>
+                <h2>Stage Handoffs</h2>
+              </div>
+              <div id="artifact-view" class="artifact-view" data-testid="artifact-view"></div>
+            </div>
+          </div>
+
+          <div class="panel split-panel lower-split">
+            <div class="detail-pane">
+              <div class="panel-header">
+                <p class="section-kicker">PR plan</p>
+                <h2>Incremental Branches</h2>
+              </div>
+              <div id="pr-plan" class="pr-plan" data-testid="pr-plan"></div>
+            </div>
+
+            <div class="detail-pane">
+              <div class="panel-header">
+                <p class="section-kicker">Realtime feed</p>
+                <h2>Events</h2>
+              </div>
+              <div id="event-feed" class="event-feed" data-testid="event-feed"></div>
+            </div>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>
