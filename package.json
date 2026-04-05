@@ -6,6 +6,7 @@
   "description": "A lightweight harness for planning and tracking code delivery one function or service at a time.",
   "scripts": {
     "start": "node src/server.js",
+    "experiment:pilot": "node src/run-pilot-experiments.js",
     "test": "node --test"
   },
   "engines": {

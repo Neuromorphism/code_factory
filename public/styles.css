@@ -203,7 +203,8 @@ button.ghost {
 .work-item,
 .artifact-card,
 .plan-card,
-.event-card {
+.event-card,
+.competition-card {
   border-radius: 18px;
   background: rgba(255, 255, 255, 0.65);
   padding: 16px;
@@ -213,6 +214,7 @@ button.ghost {
 .plan-card p,
 .artifact-card p,
 .event-card p,
+.competition-card p,
 .work-item p,
 .protocol-pill small {
   margin: 0;
@@ -238,7 +240,8 @@ button.ghost {
 .work-items,
 .artifact-view,
 .pr-plan,
-.event-feed {
+.event-feed,
+.competition-board {
   display: grid;
   gap: 14px;
   max-height: 580px;
@@ -321,6 +324,49 @@ pre {
   font-family: "Courier New", Courier, monospace;
   font-size: 0.8rem;
   margin-bottom: 8px;
+}
+
+.competition-board {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  max-height: none;
+  overflow: visible;
+  padding-right: 0;
+}
+
+.leaderboard-list,
+.highlight-list {
+  list-style: none;
+  margin: 14px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.leaderboard-list li,
+.highlight-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(24, 34, 41, 0.08);
+}
+
+.leaderboard-list li:first-child,
+.highlight-list li:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.leaderboard-list span {
+  color: var(--muted);
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.82rem;
+  text-align: right;
+}
+
+.competition-highlights li {
+  justify-content: flex-start;
 }
 
 @media (max-width: 1120px) {

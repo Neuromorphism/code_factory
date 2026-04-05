@@ -5,6 +5,8 @@ const state = {
   syntheticUsers: [],
   workflowProtocol: [],
   backends: [],
+  competitionResults: [],
+  experimentResults: [],
   eventSource: null
 };
 
@@ -279,12 +281,107 @@ function renderEvents() {
     .join("");
 }
 
+function renderCompetitionBoard() {
+  const container = document.querySelector("#competition-board");
+  const latestCompetition = state.competitionResults[0];
+  const latestExperiment = state.experimentResults[0];
+
+  if (!latestCompetition && !latestExperiment) {
+    container.innerHTML = `
+      <article class="artifact-card artifact-empty">
+        <h3>No competition artifacts yet</h3>
+        <p>Run a live tournament to populate benchmark, league, and season standings.</p>
+      </article>
+    `;
+    return;
+  }
+
+  const benchmarkMarkup = latestCompetition
+    ? `
+      <article class="competition-card">
+        <p class="work-item-order">Latest benchmark</p>
+        <h3>${latestCompetition.id}</h3>
+        <p>${latestCompetition.benchmark.name}</p>
+        <ul class="leaderboard-list">
+          ${(latestCompetition.summary || [])
+            .slice(0, 4)
+            .map(
+              (entry) =>
+                `<li><strong>${entry.label}</strong><span>${Math.round(entry.resolvedRate * 100)}% resolved · ${entry.meanTimeToCompletionSeconds}s mean</span></li>`
+            )
+            .join("")}
+        </ul>
+      </article>
+    `
+    : "";
+
+  const leagueMarkup = latestExperiment
+    ? `
+      <article class="competition-card">
+        <p class="work-item-order">Latest tournament</p>
+        <h3>${latestExperiment.batchId}</h3>
+        <p>${latestExperiment.league?.style?.label || "League"} · personas ${
+          latestExperiment.enablePersonas ? "on" : "off"
+        }</p>
+        <ul class="leaderboard-list">
+          ${(latestExperiment.league?.standings || [])
+            .slice(0, 4)
+            .map((entry) => {
+              const score =
+                entry.totalScore ??
+                entry.finalScore ??
+                entry.penaltyMinutes ??
+                entry.totalTimeSeconds ??
+                entry.solved ??
+                0;
+              return `<li><strong>${entry.team}</strong><span>${score}</span></li>`;
+            })
+            .join("")}
+        </ul>
+      </article>
+    `
+    : "";
+
+  const seasonMarkup = latestExperiment?.season?.overallStandings?.length
+    ? `
+      <article class="competition-card">
+        <p class="work-item-order">Grand circuit</p>
+        <h3>${latestExperiment.season.circuitName}</h3>
+        <ul class="leaderboard-list">
+          ${latestExperiment.season.overallStandings
+            .slice(0, 4)
+            .map(
+              (entry) =>
+                `<li><strong>${entry.team}</strong><span>${entry.seasonPoints} pts · ${entry.eventWins} wins</span></li>`
+            )
+            .join("")}
+        </ul>
+      </article>
+    `
+    : "";
+
+  const highlightsMarkup = latestExperiment?.league?.highlights?.length
+    ? `
+      <article class="competition-card competition-highlights">
+        <p class="work-item-order">Highlights</p>
+        <h3>Live readout</h3>
+        <ul class="highlight-list">
+          ${latestExperiment.league.highlights.map((highlight) => `<li>${highlight}</li>`).join("")}
+        </ul>
+      </article>
+    `
+    : "";
+
+  container.innerHTML = [benchmarkMarkup, leagueMarkup, seasonMarkup, highlightsMarkup].filter(Boolean).join("");
+}
+
 function render() {
   renderSummary();
   renderWorkItems();
   renderArtifacts();
   renderPrPlan();
   renderEvents();
+  renderCompetitionBoard();
 }
 
 async function refreshSessions(preferredSessionId = state.session?.id) {
@@ -302,6 +399,17 @@ async function loadSession(sessionId) {
   const payload = await fetchJson(`/api/sessions/${sessionId}`);
   state.session = payload.session;
   render();
+}
+
+async function refreshCompetitionBoard() {
+  const [competitionData, experimentData] = await Promise.all([
+    fetchJson("/api/competition/results"),
+    fetchJson("/api/experiments/results")
+  ]);
+
+  state.competitionResults = competitionData.results;
+  state.experimentResults = experimentData.results;
+  renderCompetitionBoard();
 }
 
 function connectToSession(sessionId) {
@@ -335,6 +443,10 @@ async function initialize() {
   populateBackends();
   populateSyntheticUsers();
   await refreshSessions();
+  await refreshCompetitionBoard();
+  window.setInterval(() => {
+    refreshCompetitionBoard().catch((error) => setConnectionLabel(error.message));
+  }, 15000);
 }
 
 projectTypeSelect.addEventListener("change", () => {

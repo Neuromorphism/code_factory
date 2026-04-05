@@ -6,6 +6,10 @@ import { AgentBackendRegistry } from "./backend-registry.js";
 import { createCompetitionSpec } from "./benchmark/competition-service.js";
 import { CompetitionResultRepository } from "./benchmark/result-repository.js";
 import { GitService } from "./git-service.js";
+import { listExperimentBatches } from "./experiments/experiment-batches.js";
+import { createExperimentTemplate } from "./experiments/experiment-service.js";
+import { listCompetitionStyles } from "./league/competition-styles.js";
+import { listTeamProfiles } from "./league/team-profiles.js";
 import { HarnessOrchestrator } from "./orchestrator.js";
 import { createSession } from "./plan-service.js";
 import { getProjectType, listProjectTypes, listSyntheticUsers } from "./project-types.js";
@@ -170,6 +174,27 @@ export function createHarnessApp({
     if (request.method === "GET" && url.pathname === "/api/competition/results") {
       return json(response, 200, {
         results: competitionResultRepository.listResults()
+      });
+    }
+
+    if (request.method === "GET" && url.pathname === "/api/competition/tournaments") {
+      return json(response, 200, {
+        tournaments: competitionResultRepository.listTournamentArtifacts()
+      });
+    }
+
+    if (request.method === "GET" && url.pathname === "/api/experiments/template") {
+      return json(response, 200, {
+        experiment: createExperimentTemplate(),
+        batches: listExperimentBatches(),
+        leagueStyles: listCompetitionStyles(),
+        teamProfiles: listTeamProfiles()
+      });
+    }
+
+    if (request.method === "GET" && url.pathname === "/api/experiments/results") {
+      return json(response, 200, {
+        results: competitionResultRepository.listTournamentArtifacts()
       });
     }
 
