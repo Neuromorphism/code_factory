@@ -1,0 +1,20 @@
+{
+  "name": "code_factory",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "A lightweight harness for planning and tracking code delivery one function or service at a time.",
+  "scripts": {
+    "start": "node src/server.js",
+    "experiment:pilot": "node src/run-pilot-experiments.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@openai/codex-sdk": "^0.118.0",
+    "playwright": "^1.59.1",
+    "pngjs": "^7.0.0"
+  }
+}

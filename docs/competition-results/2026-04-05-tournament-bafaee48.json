@@ -1,0 +1,40 @@
+{
+  "id": "tournament-bafaee48",
+  "createdAt": "2026-04-05T04:59:56.003Z",
+  "benchmark": {
+    "name": "Synthetic Build Break Tournament",
+    "instanceCount": 1,
+    "metrics": [
+      "resolved_rate",
+      "mean_time_to_completion_seconds",
+      "median_time_to_completion_seconds"
+    ]
+  },
+  "orchestrator": "codex-5.4",
+  "localModelTarget": "gemma4:e4b",
+  "frameworks": [
+    {
+      "id": "solo_builder",
+      "label": "Solo Builder"
+    }
+  ],
+  "results": [
+    {
+      "frameworkId": "solo_builder",
+      "benchmarkCaseId": "normalize-tags",
+      "resolved": true,
+      "durationSeconds": 4
+    }
+  ],
+  "summary": [
+    {
+      "frameworkId": "solo_builder",
+      "label": "Solo Builder",
+      "attempts": 1,
+      "resolved": 1,
+      "resolvedRate": 1,
+      "meanTimeToCompletionSeconds": 4,
+      "medianTimeToCompletionSeconds": 4
+    }
+  ]
+}

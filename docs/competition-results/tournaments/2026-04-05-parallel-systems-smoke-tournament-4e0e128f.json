@@ -1,0 +1,878 @@
+{
+  "kind": "tournament_artifact",
+  "batchId": "parallel-systems-smoke",
+  "createdAt": "2026-04-05T18:46:23.746Z",
+  "tournamentId": "tournament-4e0e128f",
+  "enablePersonas": false,
+  "enableFixRounds": true,
+  "tournamentSummary": {
+    "builders": [
+      {
+        "strategyId": "universalist_solo",
+        "label": "Universalist Solo",
+        "tasks": 1,
+        "totalBuildScore": 5,
+        "hiddenPasses": 1,
+        "visiblePasses": 1,
+        "totalDurationMs": 9995
+      },
+      {
+        "strategyId": "blackboard_collective",
+        "label": "Blackboard Collective",
+        "tasks": 1,
+        "totalBuildScore": 2,
+        "hiddenPasses": 0,
+        "visiblePasses": 1,
+        "totalDurationMs": 29693
+      },
+      {
+        "strategyId": "parallel_clone_swarm",
+        "label": "Parallel Clone Swarm",
+        "tasks": 1,
+        "totalBuildScore": 2,
+        "hiddenPasses": 0,
+        "visiblePasses": 1,
+        "totalDurationMs": 65466
+      },
+      {
+        "strategyId": "collab_pod_builder",
+        "label": "Collab Pod Builder",
+        "tasks": 1,
+        "totalBuildScore": 2,
+        "hiddenPasses": 0,
+        "visiblePasses": 1,
+        "totalDurationMs": 73129
+      },
+      {
+        "strategyId": "consensus_bundle_collective",
+        "label": "Consensus Bundle Collective",
+        "tasks": 1,
+        "totalBuildScore": 0,
+        "hiddenPasses": 0,
+        "visiblePasses": 0,
+        "totalDurationMs": 16133
+      }
+    ],
+    "breakers": [
+      {
+        "strategyId": "gossip_breaker_mesh",
+        "label": "Gossip Breaker Mesh",
+        "attempts": 5,
+        "successfulBreaks": 11,
+        "family": "breaker",
+        "totalDurationMs": 44505
+      },
+      {
+        "strategyId": "test_mesh",
+        "label": "Test Mesh",
+        "attempts": 5,
+        "successfulBreaks": 10,
+        "family": "tester",
+        "totalDurationMs": 53999
+      },
+      {
+        "strategyId": "break_squad",
+        "label": "Break Squad",
+        "attempts": 5,
+        "successfulBreaks": 7,
+        "family": "breaker",
+        "totalDurationMs": 64736
+      },
+      {
+        "strategyId": "breaker_solo",
+        "label": "Solo Breaker",
+        "attempts": 5,
+        "successfulBreaks": 0,
+        "family": "breaker",
+        "totalDurationMs": 0
+      }
+    ],
+    "defenses": [
+      {
+        "strategyId": "universalist_solo",
+        "label": "Universalist Solo",
+        "attacksFaced": 8,
+        "successfulBreaksAgainstIt": 6,
+        "recoveredBreaks": 0,
+        "remainingBreaksAfterFix": 6
+      },
+      {
+        "strategyId": "collab_pod_builder",
+        "label": "Collab Pod Builder",
+        "attacksFaced": 8,
+        "successfulBreaksAgainstIt": 11,
+        "recoveredBreaks": 4,
+        "remainingBreaksAfterFix": 7
+      },
+      {
+        "strategyId": "blackboard_collective",
+        "label": "Blackboard Collective",
+        "attacksFaced": 8,
+        "successfulBreaksAgainstIt": 17,
+        "recoveredBreaks": 0,
+        "remainingBreaksAfterFix": 17
+      },
+      {
+        "strategyId": "parallel_clone_swarm",
+        "label": "Parallel Clone Swarm",
+        "attacksFaced": 8,
+        "successfulBreaksAgainstIt": 18,
+        "recoveredBreaks": 0,
+        "remainingBreaksAfterFix": 18
+      },
+      {
+        "strategyId": "consensus_bundle_collective",
+        "label": "Consensus Bundle Collective",
+        "attacksFaced": 8,
+        "successfulBreaksAgainstIt": 27,
+        "recoveredBreaks": 1,
+        "remainingBreaksAfterFix": 26
+      }
+    ],
+    "swapAttackers": [
+      {
+        "strategyId": "universalist_solo",
+        "label": "Universalist Solo",
+        "swapMatches": 4,
+        "successfulBreaks": 15
+      },
+      {
+        "strategyId": "collab_pod_builder",
+        "label": "Collab Pod Builder",
+        "swapMatches": 4,
+        "successfulBreaks": 12
+      },
+      {
+        "strategyId": "consensus_bundle_collective",
+        "label": "Consensus Bundle Collective",
+        "swapMatches": 4,
+        "successfulBreaks": 9
+      },
+      {
+        "strategyId": "parallel_clone_swarm",
+        "label": "Parallel Clone Swarm",
+        "swapMatches": 4,
+        "successfulBreaks": 9
+      },
+      {
+        "strategyId": "blackboard_collective",
+        "label": "Blackboard Collective",
+        "swapMatches": 4,
+        "successfulBreaks": 6
+      }
+    ],
+    "fixers": [
+      {
+        "strategyId": "collab_pod_builder",
+        "label": "Collab Pod Builder",
+        "rounds": 1,
+        "confirmedFailures": 11,
+        "recoveredBreaks": 4,
+        "remainingBreaks": 7,
+        "retainedHiddenPasses": 1
+      },
+      {
+        "strategyId": "consensus_bundle_collective",
+        "label": "Consensus Bundle Collective",
+        "rounds": 1,
+        "confirmedFailures": 27,
+        "recoveredBreaks": 1,
+        "remainingBreaks": 26,
+        "retainedHiddenPasses": 0
+      },
+      {
+        "strategyId": "universalist_solo",
+        "label": "Universalist Solo",
+        "rounds": 1,
+        "confirmedFailures": 6,
+        "recoveredBreaks": 0,
+        "remainingBreaks": 6,
+        "retainedHiddenPasses": 1
+      },
+      {
+        "strategyId": "blackboard_collective",
+        "label": "Blackboard Collective",
+        "rounds": 1,
+        "confirmedFailures": 17,
+        "recoveredBreaks": 0,
+        "remainingBreaks": 17,
+        "retainedHiddenPasses": 0
+      },
+      {
+        "strategyId": "parallel_clone_swarm",
+        "label": "Parallel Clone Swarm",
+        "rounds": 1,
+        "confirmedFailures": 18,
+        "recoveredBreaks": 0,
+        "remainingBreaks": 18,
+        "retainedHiddenPasses": 0
+      }
+    ],
+    "arenas": [
+      {
+        "strategyId": "universalist_solo",
+        "label": "Universalist Solo",
+        "arenaEvents": 0,
+        "arenaPoints": 0,
+        "arenaWins": 0,
+        "arenaLosses": 0
+      },
+      {
+        "strategyId": "blackboard_collective",
+        "label": "Blackboard Collective",
+        "arenaEvents": 0,
+        "arenaPoints": 0,
+        "arenaWins": 0,
+        "arenaLosses": 0
+      },
+      {
+        "strategyId": "consensus_bundle_collective",
+        "label": "Consensus Bundle Collective",
+        "arenaEvents": 0,
+        "arenaPoints": 0,
+        "arenaWins": 0,
+        "arenaLosses": 0
+      },
+      {
+        "strategyId": "parallel_clone_swarm",
+        "label": "Parallel Clone Swarm",
+        "arenaEvents": 0,
+        "arenaPoints": 0,
+        "arenaWins": 0,
+        "arenaLosses": 0
+      },
+      {
+        "strategyId": "collab_pod_builder",
+        "label": "Collab Pod Builder",
+        "arenaEvents": 0,
+        "arenaPoints": 0,
+        "arenaWins": 0,
+        "arenaLosses": 0
+      }
+    ],
+    "overall": [
+      {
+        "strategyId": "universalist_solo",
+        "label": "Universalist Solo",
+        "compositeScore": 107
+      },
+      {
+        "strategyId": "collab_pod_builder",
+        "label": "Collab Pod Builder",
+        "compositeScore": 97
+      },
+      {
+        "strategyId": "parallel_clone_swarm",
+        "label": "Parallel Clone Swarm",
+        "compositeScore": 20
+      },
+      {
+        "strategyId": "blackboard_collective",
+        "label": "Blackboard Collective",
+        "compositeScore": -1
+      },
+      {
+        "strategyId": "consensus_bundle_collective",
+        "label": "Consensus Bundle Collective",
+        "compositeScore": -1
+      }
+    ]
+  },
+  "league": {
+    "id": "league-e35d2fe1",
+    "createdAt": "2026-04-05T18:46:23.747Z",
+    "style": {
+      "id": "icpc_sprint",
+      "label": "ICPC Sprint",
+      "inspiration": "ICPC-style multi-problem onsite contest",
+      "sourceUrl": "https://ec.na.icpc.global/rules-info/",
+      "venueTheme": "onsite finals hall",
+      "summary": "Rank by problems solved, then lowest penalty time. Penalty is based on completion time plus failed-attempt cost.",
+      "scoring": {
+        "type": "solved_then_penalty",
+        "wrongAttemptPenaltyMinutes": 20,
+        "scoreboardFreezeMinutes": 60
+      }
+    },
+    "standings": [
+      {
+        "team": "Universalist Solo",
+        "solved": 0,
+        "penaltyMinutes": 121
+      },
+      {
+        "team": "Blackboard Collective",
+        "solved": 0,
+        "penaltyMinutes": 141
+      },
+      {
+        "team": "Parallel Clone Swarm",
+        "solved": 0,
+        "penaltyMinutes": 142
+      },
+      {
+        "team": "Collab Pod Builder",
+        "solved": 0,
+        "penaltyMinutes": 142
+      },
+      {
+        "team": "Consensus Bundle Collective",
+        "solved": 0,
+        "penaltyMinutes": 161
+      }
+    ],
+    "highlights": [
+      "Top builder: Universalist Solo with build score 5.",
+      "Best challenger: Universalist Solo with 15 successful swap breaks.",
+      "Toughest defense: Universalist Solo allowed 6 successful breaks before fix recovery.",
+      "Arena leader: Universalist Solo earned 0 arena points."
+    ]
+  },
+  "season": {
+    "id": "season-3c15460d",
+    "createdAt": "2026-04-05T18:46:23.748Z",
+    "circuitName": "Code Factory Grand Circuit",
+    "events": [
+      {
+        "round": 1,
+        "styleId": "icpc_sprint",
+        "title": "ICPC Sprint at Summit Hall",
+        "venue": {
+          "name": "Summit Hall",
+          "city": "Boulder",
+          "atmosphere": "onsite finals floor with frozen scoreboards and visible nerves"
+        },
+        "league": {
+          "id": "league-6d8fa69d",
+          "createdAt": "2026-04-05T18:46:23.747Z",
+          "style": {
+            "id": "icpc_sprint",
+            "label": "ICPC Sprint",
+            "inspiration": "ICPC-style multi-problem onsite contest",
+            "sourceUrl": "https://ec.na.icpc.global/rules-info/",
+            "venueTheme": "onsite finals hall",
+            "summary": "Rank by problems solved, then lowest penalty time. Penalty is based on completion time plus failed-attempt cost.",
+            "scoring": {
+              "type": "solved_then_penalty",
+              "wrongAttemptPenaltyMinutes": 20,
+              "scoreboardFreezeMinutes": 60
+            }
+          },
+          "standings": [
+            {
+              "team": "Universalist Solo",
+              "solved": 0,
+              "penaltyMinutes": 121
+            },
+            {
+              "team": "Blackboard Collective",
+              "solved": 0,
+              "penaltyMinutes": 141
+            },
+            {
+              "team": "Parallel Clone Swarm",
+              "solved": 0,
+              "penaltyMinutes": 142
+            },
+            {
+              "team": "Collab Pod Builder",
+              "solved": 0,
+              "penaltyMinutes": 142
+            },
+            {
+              "team": "Consensus Bundle Collective",
+              "solved": 0,
+              "penaltyMinutes": 161
+            }
+          ],
+          "highlights": [
+            "Top builder: Universalist Solo with build score 5.",
+            "Best challenger: Universalist Solo with 15 successful swap breaks.",
+            "Toughest defense: Universalist Solo allowed 6 successful breaks before fix recovery.",
+            "Arena leader: Universalist Solo earned 0 arena points."
+          ]
+        },
+        "podium": [
+          {
+            "team": "Universalist Solo",
+            "solved": 0,
+            "penaltyMinutes": 121
+          },
+          {
+            "team": "Blackboard Collective",
+            "solved": 0,
+            "penaltyMinutes": 141
+          },
+          {
+            "team": "Parallel Clone Swarm",
+            "solved": 0,
+            "penaltyMinutes": 142
+          }
+        ]
+      },
+      {
+        "round": 2,
+        "styleId": "topcoder_marathon",
+        "title": "Topcoder Marathon at Ladder Dome",
+        "venue": {
+          "name": "Ladder Dome",
+          "city": "Seattle",
+          "atmosphere": "live ladder arena with constant provisional rank swings"
+        },
+        "league": {
+          "id": "league-d69e5c4c",
+          "createdAt": "2026-04-05T18:46:23.748Z",
+          "style": {
+            "id": "topcoder_marathon",
+            "label": "Topcoder Marathon",
+            "inspiration": "Topcoder provisional then hidden system testing",
+            "sourceUrl": "https://help.topcoder.com/hc/en-us/articles/24954728938011-Marathon-Matches-MM",
+            "venueTheme": "online ladder arena",
+            "summary": "Use provisional scores during the coding phase, then final standings after hidden-case system testing.",
+            "scoring": {
+              "type": "provisional_then_final",
+              "leaderboardMode": "iterative"
+            }
+          },
+          "standings": [
+            {
+              "team": "Universalist Solo",
+              "provisionalScore": 1,
+              "finalScore": 5
+            },
+            {
+              "team": "Parallel Clone Swarm",
+              "provisionalScore": 1,
+              "finalScore": 2
+            },
+            {
+              "team": "Collab Pod Builder",
+              "provisionalScore": 1,
+              "finalScore": 2
+            },
+            {
+              "team": "Blackboard Collective",
+              "provisionalScore": 1,
+              "finalScore": 2
+            },
+            {
+              "team": "Consensus Bundle Collective",
+              "provisionalScore": 0,
+              "finalScore": 0
+            }
+          ],
+          "highlights": [
+            "Top builder: Universalist Solo with build score 5.",
+            "Best challenger: Universalist Solo with 15 successful swap breaks.",
+            "Toughest defense: Universalist Solo allowed 6 successful breaks before fix recovery.",
+            "Arena leader: Universalist Solo earned 0 arena points."
+          ]
+        },
+        "podium": [
+          {
+            "team": "Universalist Solo",
+            "provisionalScore": 1,
+            "finalScore": 5
+          },
+          {
+            "team": "Parallel Clone Swarm",
+            "provisionalScore": 1,
+            "finalScore": 2
+          },
+          {
+            "team": "Collab Pod Builder",
+            "provisionalScore": 1,
+            "finalScore": 2
+          }
+        ]
+      },
+      {
+        "round": 3,
+        "styleId": "srm_challenge",
+        "title": "SRM Challenge at Redline Theater",
+        "venue": {
+          "name": "Redline Theater",
+          "city": "Austin",
+          "atmosphere": "challenge phase pit with instant counterexample pressure"
+        },
+        "league": {
+          "id": "league-997b9238",
+          "createdAt": "2026-04-05T18:46:23.748Z",
+          "style": {
+            "id": "srm_challenge",
+            "label": "SRM Challenge",
+            "inspiration": "Topcoder SRM challenge phase",
+            "sourceUrl": "https://help.topcoder.com/hc/en-us/articles/24954129102491-Single-Round-Matches-SRMs",
+            "venueTheme": "challenge phase arena",
+            "summary": "Score build performance, then award challenge bonuses for breaking opponent solutions during the attack phase.",
+            "scoring": {
+              "type": "build_plus_challenge",
+              "successfulChallengePoints": 10,
+              "failedChallengePenalty": 5
+            }
+          },
+          "standings": [
+            {
+              "team": "Universalist Solo",
+              "buildScore": 5,
+              "challengePoints": 150,
+              "totalScore": 155
+            },
+            {
+              "team": "Collab Pod Builder",
+              "buildScore": 2,
+              "challengePoints": 120,
+              "totalScore": 122
+            },
+            {
+              "team": "Parallel Clone Swarm",
+              "buildScore": 2,
+              "challengePoints": 90,
+              "totalScore": 92
+            },
+            {
+              "team": "Consensus Bundle Collective",
+              "buildScore": 0,
+              "challengePoints": 90,
+              "totalScore": 90
+            },
+            {
+              "team": "Blackboard Collective",
+              "buildScore": 2,
+              "challengePoints": 60,
+              "totalScore": 62
+            }
+          ],
+          "highlights": [
+            "Top builder: Universalist Solo with build score 5.",
+            "Best challenger: Universalist Solo with 15 successful swap breaks.",
+            "Toughest defense: Universalist Solo allowed 6 successful breaks before fix recovery.",
+            "Arena leader: Universalist Solo earned 0 arena points."
+          ]
+        },
+        "podium": [
+          {
+            "team": "Universalist Solo",
+            "buildScore": 5,
+            "challengePoints": 150,
+            "totalScore": 155
+          },
+          {
+            "team": "Collab Pod Builder",
+            "buildScore": 2,
+            "challengePoints": 120,
+            "totalScore": 122
+          },
+          {
+            "team": "Parallel Clone Swarm",
+            "buildScore": 2,
+            "challengePoints": 90,
+            "totalScore": 92
+          }
+        ]
+      },
+      {
+        "round": 4,
+        "styleId": "bibifi_showdown",
+        "title": "Build-It Break-It Fix-It at Patchworks Lab",
+        "venue": {
+          "name": "Patchworks Lab",
+          "city": "Pittsburgh",
+          "atmosphere": "security gauntlet focused on break-fix survival"
+        },
+        "league": {
+          "id": "league-0e4870cd",
+          "createdAt": "2026-04-05T18:46:23.748Z",
+          "style": {
+            "id": "bibifi_showdown",
+            "label": "Build-It Break-It Fix-It",
+            "inspiration": "Build-it, Break-it, Fix-it secure software contest",
+            "sourceUrl": "https://www.usenix.org/conference/usenixsecurity20/presentation/greenberg",
+            "venueTheme": "security gauntlet",
+            "summary": "Teams score for shipping working code, earning verified breaks, and recovering functionality in a fix round after adversarial exchange.",
+            "scoring": {
+              "type": "build_break_fix",
+              "shipWeight": 1,
+              "breakWeight": 12,
+              "fixRecoveryWeight": 6,
+              "unresolvedBreakPenalty": 4
+            }
+          },
+          "standings": [
+            {
+              "team": "Universalist Solo",
+              "shipScore": 5,
+              "breakBonus": 180,
+              "fixRecovery": 0,
+              "unresolvedPenalty": 24,
+              "totalScore": 161
+            },
+            {
+              "team": "Collab Pod Builder",
+              "shipScore": 2,
+              "breakBonus": 144,
+              "fixRecovery": 24,
+              "unresolvedPenalty": 28,
+              "totalScore": 142
+            },
+            {
+              "team": "Parallel Clone Swarm",
+              "shipScore": 2,
+              "breakBonus": 108,
+              "fixRecovery": 0,
+              "unresolvedPenalty": 72,
+              "totalScore": 38
+            },
+            {
+              "team": "Consensus Bundle Collective",
+              "shipScore": 0,
+              "breakBonus": 108,
+              "fixRecovery": 6,
+              "unresolvedPenalty": 104,
+              "totalScore": 10
+            },
+            {
+              "team": "Blackboard Collective",
+              "shipScore": 2,
+              "breakBonus": 72,
+              "fixRecovery": 0,
+              "unresolvedPenalty": 68,
+              "totalScore": 6
+            }
+          ],
+          "highlights": [
+            "Top builder: Universalist Solo with build score 5.",
+            "Best challenger: Universalist Solo with 15 successful swap breaks.",
+            "Toughest defense: Universalist Solo allowed 6 successful breaks before fix recovery.",
+            "Arena leader: Universalist Solo earned 0 arena points."
+          ]
+        },
+        "podium": [
+          {
+            "team": "Universalist Solo",
+            "shipScore": 5,
+            "breakBonus": 180,
+            "fixRecovery": 0,
+            "unresolvedPenalty": 24,
+            "totalScore": 161
+          },
+          {
+            "team": "Collab Pod Builder",
+            "shipScore": 2,
+            "breakBonus": 144,
+            "fixRecovery": 24,
+            "unresolvedPenalty": 28,
+            "totalScore": 142
+          },
+          {
+            "team": "Parallel Clone Swarm",
+            "shipScore": 2,
+            "breakBonus": 108,
+            "fixRecovery": 0,
+            "unresolvedPenalty": 72,
+            "totalScore": 38
+          }
+        ]
+      },
+      {
+        "round": 5,
+        "styleId": "aixcc_patch_race",
+        "title": "AIxCC Patch Race at Autonomy Annex",
+        "venue": {
+          "name": "Autonomy Annex",
+          "city": "Las Vegas",
+          "atmosphere": "autonomous offense-defense room with nonstop arena telemetry"
+        },
+        "league": {
+          "id": "league-53a5fcd5",
+          "createdAt": "2026-04-05T18:46:23.748Z",
+          "style": {
+            "id": "aixcc_patch_race",
+            "label": "AIxCC Patch Race",
+            "inspiration": "DARPA AI Cyber Challenge patch-and-attack scoring",
+            "sourceUrl": "https://www.darpa.mil/research/programs/cyber-grand-challenge",
+            "venueTheme": "autonomous offense-defense arena",
+            "summary": "Prioritize maintaining functionality while patching vulnerabilities quickly, with secondary credit for finding and exploiting weaknesses.",
+            "scoring": {
+              "type": "availability_security_patch",
+              "patchWeight": 3,
+              "breakWeight": 1,
+              "availabilityWeight": 2
+            }
+          },
+          "standings": [
+            {
+              "team": "Collab Pod Builder",
+              "availabilityScore": 4,
+              "patchScore": 12,
+              "breakScore": 12,
+              "arenaScore": 0,
+              "totalScore": 14
+            },
+            {
+              "team": "Universalist Solo",
+              "availabilityScore": 10,
+              "patchScore": 0,
+              "breakScore": 15,
+              "arenaScore": 0,
+              "totalScore": 13
+            },
+            {
+              "team": "Parallel Clone Swarm",
+              "availabilityScore": 4,
+              "patchScore": 0,
+              "breakScore": 9,
+              "arenaScore": 0,
+              "totalScore": -23
+            },
+            {
+              "team": "Blackboard Collective",
+              "availabilityScore": 4,
+              "patchScore": 0,
+              "breakScore": 6,
+              "arenaScore": 0,
+              "totalScore": -24
+            },
+            {
+              "team": "Consensus Bundle Collective",
+              "availabilityScore": 0,
+              "patchScore": 3,
+              "breakScore": 9,
+              "arenaScore": 0,
+              "totalScore": -40
+            }
+          ],
+          "highlights": [
+            "Top builder: Universalist Solo with build score 5.",
+            "Best challenger: Universalist Solo with 15 successful swap breaks.",
+            "Toughest defense: Universalist Solo allowed 6 successful breaks before fix recovery.",
+            "Arena leader: Universalist Solo earned 0 arena points."
+          ]
+        },
+        "podium": [
+          {
+            "team": "Collab Pod Builder",
+            "availabilityScore": 4,
+            "patchScore": 12,
+            "breakScore": 12,
+            "arenaScore": 0,
+            "totalScore": 14
+          },
+          {
+            "team": "Universalist Solo",
+            "availabilityScore": 10,
+            "patchScore": 0,
+            "breakScore": 15,
+            "arenaScore": 0,
+            "totalScore": 13
+          },
+          {
+            "team": "Parallel Clone Swarm",
+            "availabilityScore": 4,
+            "patchScore": 0,
+            "breakScore": 9,
+            "arenaScore": 0,
+            "totalScore": -23
+          }
+        ]
+      }
+    ],
+    "overallStandings": [
+      {
+        "team": "Universalist Solo",
+        "seasonPoints": 47,
+        "eventWins": 4,
+        "podiums": 5
+      },
+      {
+        "team": "Collab Pod Builder",
+        "seasonPoints": 32,
+        "eventWins": 1,
+        "podiums": 4
+      },
+      {
+        "team": "Parallel Clone Swarm",
+        "seasonPoints": 27,
+        "eventWins": 0,
+        "podiums": 5
+      },
+      {
+        "team": "Blackboard Collective",
+        "seasonPoints": 17,
+        "eventWins": 0,
+        "podiums": 1
+      },
+      {
+        "team": "Consensus Bundle Collective",
+        "seasonPoints": 12,
+        "eventWins": 0,
+        "podiums": 0
+      }
+    ],
+    "teamCards": [
+      {
+        "strategyId": "universalist_solo",
+        "strategyLabel": "Universalist Solo",
+        "teamName": "Universalist Solo",
+        "archetype": "agent-team",
+        "backstory": "No custom backstory assigned for this run.",
+        "motto": "Ship working code."
+      },
+      {
+        "strategyId": "parallel_clone_swarm",
+        "strategyLabel": "Parallel Clone Swarm",
+        "teamName": "Parallel Clone Swarm",
+        "archetype": "agent-team",
+        "backstory": "No custom backstory assigned for this run.",
+        "motto": "Ship working code."
+      },
+      {
+        "strategyId": "collab_pod_builder",
+        "strategyLabel": "Collab Pod Builder",
+        "teamName": "Collab Pod Builder",
+        "archetype": "agent-team",
+        "backstory": "No custom backstory assigned for this run.",
+        "motto": "Ship working code."
+      },
+      {
+        "strategyId": "blackboard_collective",
+        "strategyLabel": "Blackboard Collective",
+        "teamName": "Blackboard Collective",
+        "archetype": "agent-team",
+        "backstory": "No custom backstory assigned for this run.",
+        "motto": "Ship working code."
+      },
+      {
+        "strategyId": "consensus_bundle_collective",
+        "strategyLabel": "Consensus Bundle Collective",
+        "teamName": "Consensus Bundle Collective",
+        "archetype": "agent-team",
+        "backstory": "No custom backstory assigned for this run.",
+        "motto": "Ship working code."
+      }
+    ],
+    "rivalries": [
+      {
+        "rivalry": "Consensus Bundle Collective vs Universalist Solo",
+        "totalSwapBreaks": 8
+      },
+      {
+        "rivalry": "Collab Pod Builder vs Consensus Bundle Collective",
+        "totalSwapBreaks": 7
+      },
+      {
+        "rivalry": "Consensus Bundle Collective vs Parallel Clone Swarm",
+        "totalSwapBreaks": 6
+      },
+      {
+        "rivalry": "Blackboard Collective vs Consensus Bundle Collective",
+        "totalSwapBreaks": 6
+      },
+      {
+        "rivalry": "Collab Pod Builder vs Universalist Solo",
+        "totalSwapBreaks": 5
+      }
+    ]
+  },
+  "personaComparison": null
+}

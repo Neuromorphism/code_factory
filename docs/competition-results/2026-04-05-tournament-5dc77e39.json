@@ -1,0 +1,59 @@
+{
+  "id": "tournament-5dc77e39",
+  "createdAt": "2026-04-05T05:10:09.668Z",
+  "benchmark": {
+    "name": "Synthetic Build Break Tournament",
+    "instanceCount": 2,
+    "metrics": [
+      "resolved_rate",
+      "mean_time_to_completion_seconds",
+      "median_time_to_completion_seconds"
+    ]
+  },
+  "orchestrator": "codex-5.4",
+  "localModelTarget": "gemma4:e4b",
+  "frameworks": [
+    {
+      "id": "solo_builder",
+      "label": "Solo Builder"
+    },
+    {
+      "id": "pipeline_five_stage",
+      "label": "Pipeline Five-Stage"
+    }
+  ],
+  "results": [
+    {
+      "frameworkId": "solo_builder",
+      "benchmarkCaseId": "token-duel",
+      "resolved": false,
+      "durationSeconds": 5
+    },
+    {
+      "frameworkId": "pipeline_five_stage",
+      "benchmarkCaseId": "token-duel",
+      "resolved": false,
+      "durationSeconds": 12
+    }
+  ],
+  "summary": [
+    {
+      "frameworkId": "solo_builder",
+      "label": "Solo Builder",
+      "attempts": 1,
+      "resolved": 0,
+      "resolvedRate": 0,
+      "meanTimeToCompletionSeconds": 5,
+      "medianTimeToCompletionSeconds": 5
+    },
+    {
+      "frameworkId": "pipeline_five_stage",
+      "label": "Pipeline Five-Stage",
+      "attempts": 1,
+      "resolved": 0,
+      "resolvedRate": 0,
+      "meanTimeToCompletionSeconds": 12,
+      "medianTimeToCompletionSeconds": 12
+    }
+  ]
+}

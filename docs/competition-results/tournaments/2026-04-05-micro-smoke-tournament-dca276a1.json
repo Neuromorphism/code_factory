@@ -1,0 +1,391 @@
+{
+  "kind": "tournament_artifact",
+  "batchId": "micro-smoke",
+  "createdAt": "2026-04-05T04:58:47.859Z",
+  "tournamentId": "tournament-dca276a1",
+  "enablePersonas": false,
+  "enableFixRounds": true,
+  "tournamentSummary": {
+    "builders": [
+      {
+        "strategyId": "solo_builder",
+        "label": "Solo Builder",
+        "tasks": 1,
+        "totalBuildScore": 10,
+        "hiddenPasses": 2,
+        "visiblePasses": 2,
+        "totalDurationMs": 2715
+      }
+    ],
+    "breakers": [
+      {
+        "strategyId": "breaker_solo",
+        "label": "Solo Breaker",
+        "attempts": 1,
+        "successfulBreaks": 0,
+        "family": "breaker",
+        "totalDurationMs": 6300
+      },
+      {
+        "strategyId": "qa_fuzzer",
+        "label": "QA Fuzzer",
+        "attempts": 0,
+        "successfulBreaks": 0,
+        "family": "tester",
+        "totalDurationMs": 0
+      },
+      {
+        "strategyId": "test_mesh",
+        "label": "Test Mesh",
+        "attempts": 0,
+        "successfulBreaks": 0,
+        "family": "tester",
+        "totalDurationMs": 0
+      }
+    ],
+    "defenses": [
+      {
+        "strategyId": "solo_builder",
+        "label": "Solo Builder",
+        "attacksFaced": 1,
+        "successfulBreaksAgainstIt": 0,
+        "recoveredBreaks": 0,
+        "remainingBreaksAfterFix": 0
+      }
+    ],
+    "swapAttackers": [
+      {
+        "strategyId": "solo_builder",
+        "label": "Solo Builder",
+        "swapMatches": 0,
+        "successfulBreaks": 0
+      }
+    ],
+    "fixers": [],
+    "arenas": [
+      {
+        "strategyId": "solo_builder",
+        "label": "Solo Builder",
+        "arenaEvents": 0,
+        "arenaPoints": 0,
+        "arenaWins": 0,
+        "arenaLosses": 0
+      }
+    ],
+    "overall": [
+      {
+        "strategyId": "solo_builder",
+        "label": "Solo Builder",
+        "compositeScore": 10
+      }
+    ]
+  },
+  "league": {
+    "id": "league-ead55cc2",
+    "createdAt": "2026-04-05T04:58:47.859Z",
+    "style": {
+      "id": "icpc_sprint",
+      "label": "ICPC Sprint",
+      "inspiration": "ICPC-style multi-problem onsite contest",
+      "sourceUrl": "https://ec.na.icpc.global/rules-info/",
+      "venueTheme": "onsite finals hall",
+      "summary": "Rank by problems solved, then lowest penalty time. Penalty is based on completion time plus failed-attempt cost.",
+      "scoring": {
+        "type": "solved_then_penalty",
+        "wrongAttemptPenaltyMinutes": 20,
+        "scoreboardFreezeMinutes": 60
+      }
+    },
+    "standings": [
+      {
+        "team": "Solo Builder",
+        "solved": 1,
+        "penaltyMinutes": 1
+      }
+    ],
+    "highlights": [
+      "Top builder: Solo Builder with build score 10.",
+      "Best challenger: Solo Builder with 0 successful swap breaks.",
+      "Toughest defense: Solo Builder allowed 0 successful breaks before fix recovery.",
+      "Arena leader: Solo Builder earned 0 arena points."
+    ]
+  },
+  "season": {
+    "id": "season-b3ab3221",
+    "createdAt": "2026-04-05T04:58:47.860Z",
+    "circuitName": "Code Factory Grand Circuit",
+    "events": [
+      {
+        "round": 1,
+        "styleId": "icpc_sprint",
+        "title": "ICPC Sprint at Summit Hall",
+        "venue": {
+          "name": "Summit Hall",
+          "city": "Boulder",
+          "atmosphere": "onsite finals floor with frozen scoreboards and visible nerves"
+        },
+        "league": {
+          "id": "league-f88323f6",
+          "createdAt": "2026-04-05T04:58:47.860Z",
+          "style": {
+            "id": "icpc_sprint",
+            "label": "ICPC Sprint",
+            "inspiration": "ICPC-style multi-problem onsite contest",
+            "sourceUrl": "https://ec.na.icpc.global/rules-info/",
+            "venueTheme": "onsite finals hall",
+            "summary": "Rank by problems solved, then lowest penalty time. Penalty is based on completion time plus failed-attempt cost.",
+            "scoring": {
+              "type": "solved_then_penalty",
+              "wrongAttemptPenaltyMinutes": 20,
+              "scoreboardFreezeMinutes": 60
+            }
+          },
+          "standings": [
+            {
+              "team": "Solo Builder",
+              "solved": 1,
+              "penaltyMinutes": 1
+            }
+          ],
+          "highlights": [
+            "Top builder: Solo Builder with build score 10.",
+            "Best challenger: Solo Builder with 0 successful swap breaks.",
+            "Toughest defense: Solo Builder allowed 0 successful breaks before fix recovery.",
+            "Arena leader: Solo Builder earned 0 arena points."
+          ]
+        },
+        "podium": [
+          {
+            "team": "Solo Builder",
+            "solved": 1,
+            "penaltyMinutes": 1
+          }
+        ]
+      },
+      {
+        "round": 2,
+        "styleId": "topcoder_marathon",
+        "title": "Topcoder Marathon at Ladder Dome",
+        "venue": {
+          "name": "Ladder Dome",
+          "city": "Seattle",
+          "atmosphere": "live ladder arena with constant provisional rank swings"
+        },
+        "league": {
+          "id": "league-c61c23f6",
+          "createdAt": "2026-04-05T04:58:47.860Z",
+          "style": {
+            "id": "topcoder_marathon",
+            "label": "Topcoder Marathon",
+            "inspiration": "Topcoder provisional then hidden system testing",
+            "sourceUrl": "https://help.topcoder.com/hc/en-us/articles/24954728938011-Marathon-Matches-MM",
+            "venueTheme": "online ladder arena",
+            "summary": "Use provisional scores during the coding phase, then final standings after hidden-case system testing.",
+            "scoring": {
+              "type": "provisional_then_final",
+              "leaderboardMode": "iterative"
+            }
+          },
+          "standings": [
+            {
+              "team": "Solo Builder",
+              "provisionalScore": 2,
+              "finalScore": 10
+            }
+          ],
+          "highlights": [
+            "Top builder: Solo Builder with build score 10.",
+            "Best challenger: Solo Builder with 0 successful swap breaks.",
+            "Toughest defense: Solo Builder allowed 0 successful breaks before fix recovery.",
+            "Arena leader: Solo Builder earned 0 arena points."
+          ]
+        },
+        "podium": [
+          {
+            "team": "Solo Builder",
+            "provisionalScore": 2,
+            "finalScore": 10
+          }
+        ]
+      },
+      {
+        "round": 3,
+        "styleId": "srm_challenge",
+        "title": "SRM Challenge at Redline Theater",
+        "venue": {
+          "name": "Redline Theater",
+          "city": "Austin",
+          "atmosphere": "challenge phase pit with instant counterexample pressure"
+        },
+        "league": {
+          "id": "league-6a8a9fd1",
+          "createdAt": "2026-04-05T04:58:47.860Z",
+          "style": {
+            "id": "srm_challenge",
+            "label": "SRM Challenge",
+            "inspiration": "Topcoder SRM challenge phase",
+            "sourceUrl": "https://help.topcoder.com/hc/en-us/articles/24954129102491-Single-Round-Matches-SRMs",
+            "venueTheme": "challenge phase arena",
+            "summary": "Score build performance, then award challenge bonuses for breaking opponent solutions during the attack phase.",
+            "scoring": {
+              "type": "build_plus_challenge",
+              "successfulChallengePoints": 10,
+              "failedChallengePenalty": 5
+            }
+          },
+          "standings": [
+            {
+              "team": "Solo Builder",
+              "buildScore": 10,
+              "challengePoints": 0,
+              "totalScore": 10
+            }
+          ],
+          "highlights": [
+            "Top builder: Solo Builder with build score 10.",
+            "Best challenger: Solo Builder with 0 successful swap breaks.",
+            "Toughest defense: Solo Builder allowed 0 successful breaks before fix recovery.",
+            "Arena leader: Solo Builder earned 0 arena points."
+          ]
+        },
+        "podium": [
+          {
+            "team": "Solo Builder",
+            "buildScore": 10,
+            "challengePoints": 0,
+            "totalScore": 10
+          }
+        ]
+      },
+      {
+        "round": 4,
+        "styleId": "bibifi_showdown",
+        "title": "Build-It Break-It Fix-It at Patchworks Lab",
+        "venue": {
+          "name": "Patchworks Lab",
+          "city": "Pittsburgh",
+          "atmosphere": "security gauntlet focused on break-fix survival"
+        },
+        "league": {
+          "id": "league-08893c8e",
+          "createdAt": "2026-04-05T04:58:47.860Z",
+          "style": {
+            "id": "bibifi_showdown",
+            "label": "Build-It Break-It Fix-It",
+            "inspiration": "Build-it, Break-it, Fix-it secure software contest",
+            "sourceUrl": "https://www.usenix.org/conference/usenixsecurity20/presentation/greenberg",
+            "venueTheme": "security gauntlet",
+            "summary": "Teams score for shipping working code, earning verified breaks, and recovering functionality in a fix round after adversarial exchange.",
+            "scoring": {
+              "type": "build_break_fix",
+              "shipWeight": 1,
+              "breakWeight": 12,
+              "fixRecoveryWeight": 6,
+              "unresolvedBreakPenalty": 4
+            }
+          },
+          "standings": [
+            {
+              "team": "Solo Builder",
+              "shipScore": 10,
+              "breakBonus": 0,
+              "fixRecovery": 0,
+              "unresolvedPenalty": 0,
+              "totalScore": 10
+            }
+          ],
+          "highlights": [
+            "Top builder: Solo Builder with build score 10.",
+            "Best challenger: Solo Builder with 0 successful swap breaks.",
+            "Toughest defense: Solo Builder allowed 0 successful breaks before fix recovery.",
+            "Arena leader: Solo Builder earned 0 arena points."
+          ]
+        },
+        "podium": [
+          {
+            "team": "Solo Builder",
+            "shipScore": 10,
+            "breakBonus": 0,
+            "fixRecovery": 0,
+            "unresolvedPenalty": 0,
+            "totalScore": 10
+          }
+        ]
+      },
+      {
+        "round": 5,
+        "styleId": "aixcc_patch_race",
+        "title": "AIxCC Patch Race at Autonomy Annex",
+        "venue": {
+          "name": "Autonomy Annex",
+          "city": "Las Vegas",
+          "atmosphere": "autonomous offense-defense room with nonstop arena telemetry"
+        },
+        "league": {
+          "id": "league-d01970ae",
+          "createdAt": "2026-04-05T04:58:47.860Z",
+          "style": {
+            "id": "aixcc_patch_race",
+            "label": "AIxCC Patch Race",
+            "inspiration": "DARPA AI Cyber Challenge patch-and-attack scoring",
+            "sourceUrl": "https://www.darpa.mil/research/programs/cyber-grand-challenge",
+            "venueTheme": "autonomous offense-defense arena",
+            "summary": "Prioritize maintaining functionality while patching vulnerabilities quickly, with secondary credit for finding and exploiting weaknesses.",
+            "scoring": {
+              "type": "availability_security_patch",
+              "patchWeight": 3,
+              "breakWeight": 1,
+              "availabilityWeight": 2
+            }
+          },
+          "standings": [
+            {
+              "team": "Solo Builder",
+              "availabilityScore": 20,
+              "patchScore": 0,
+              "breakScore": 0,
+              "arenaScore": 0,
+              "totalScore": 20
+            }
+          ],
+          "highlights": [
+            "Top builder: Solo Builder with build score 10.",
+            "Best challenger: Solo Builder with 0 successful swap breaks.",
+            "Toughest defense: Solo Builder allowed 0 successful breaks before fix recovery.",
+            "Arena leader: Solo Builder earned 0 arena points."
+          ]
+        },
+        "podium": [
+          {
+            "team": "Solo Builder",
+            "availabilityScore": 20,
+            "patchScore": 0,
+            "breakScore": 0,
+            "arenaScore": 0,
+            "totalScore": 20
+          }
+        ]
+      }
+    ],
+    "overallStandings": [
+      {
+        "team": "Solo Builder",
+        "seasonPoints": 50,
+        "eventWins": 5,
+        "podiums": 5
+      }
+    ],
+    "teamCards": [
+      {
+        "strategyId": "solo_builder",
+        "strategyLabel": "Solo Builder",
+        "teamName": "Solo Builder",
+        "archetype": "agent-team",
+        "backstory": "No custom backstory assigned for this run.",
+        "motto": "Ship working code."
+      }
+    ],
+    "rivalries": []
+  },
+  "personaComparison": null
+}
