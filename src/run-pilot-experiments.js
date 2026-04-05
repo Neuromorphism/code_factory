@@ -53,7 +53,10 @@ const tournament = await runPilotTournament({
   attackerIds: batch.attackerIds,
   challengeIds: batch.challengeIds,
   enablePersonas: personasEnabled,
-  client
+  client,
+  onProgress(event) {
+    console.log(JSON.stringify({ progress: event }));
+  }
 });
 const repository = new CompetitionResultRepository({
   baseDir: path.resolve(process.cwd(), "docs/competition-results")
@@ -66,12 +69,15 @@ let personaComparison = null;
 if (process.env.EXPERIMENT_COMPARE_PERSONAS === "1") {
   const controlTournament = personasEnabled
     ? await runPilotTournament({
-        builderIds: batch.builderIds,
-        attackerIds: batch.attackerIds,
-        challengeIds: batch.challengeIds,
-        enablePersonas: false,
-        client
-      })
+      builderIds: batch.builderIds,
+      attackerIds: batch.attackerIds,
+      challengeIds: batch.challengeIds,
+      enablePersonas: false,
+      client,
+      onProgress(event) {
+        console.log(JSON.stringify({ progress: { personaRun: "baseline", ...event } }));
+      }
+    })
     : tournament;
   const personaTournament = personasEnabled
     ? tournament
@@ -80,7 +86,10 @@ if (process.env.EXPERIMENT_COMPARE_PERSONAS === "1") {
         attackerIds: batch.attackerIds,
         challengeIds: batch.challengeIds,
         enablePersonas: true,
-        client
+        client,
+        onProgress(event) {
+          console.log(JSON.stringify({ progress: { personaRun: "persona", ...event } }));
+        }
       });
   personaComparison = {
     batchId,
