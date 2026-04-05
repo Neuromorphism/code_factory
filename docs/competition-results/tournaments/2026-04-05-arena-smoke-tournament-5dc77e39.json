@@ -1,0 +1,559 @@
+{
+  "kind": "tournament_artifact",
+  "batchId": "arena-smoke",
+  "createdAt": "2026-04-05T05:12:26.304Z",
+  "tournamentId": "tournament-5dc77e39",
+  "enablePersonas": false,
+  "enableFixRounds": true,
+  "tournamentSummary": {
+    "builders": [
+      {
+        "strategyId": "solo_builder",
+        "label": "Solo Builder",
+        "tasks": 1,
+        "totalBuildScore": 2,
+        "hiddenPasses": 0,
+        "visiblePasses": 1,
+        "totalDurationMs": 5256
+      },
+      {
+        "strategyId": "pipeline_five_stage",
+        "label": "Pipeline Five-Stage",
+        "tasks": 1,
+        "totalBuildScore": 0,
+        "hiddenPasses": 0,
+        "visiblePasses": 0,
+        "totalDurationMs": 12283
+      }
+    ],
+    "breakers": [
+      {
+        "strategyId": "breaker_solo",
+        "label": "Solo Breaker",
+        "attempts": 2,
+        "successfulBreaks": 1,
+        "family": "breaker",
+        "totalDurationMs": 8552
+      },
+      {
+        "strategyId": "qa_fuzzer",
+        "label": "QA Fuzzer",
+        "attempts": 0,
+        "successfulBreaks": 0,
+        "family": "tester",
+        "totalDurationMs": 0
+      },
+      {
+        "strategyId": "test_mesh",
+        "label": "Test Mesh",
+        "attempts": 0,
+        "successfulBreaks": 0,
+        "family": "tester",
+        "totalDurationMs": 0
+      }
+    ],
+    "defenses": [
+      {
+        "strategyId": "pipeline_five_stage",
+        "label": "Pipeline Five-Stage",
+        "attacksFaced": 2,
+        "successfulBreaksAgainstIt": 0,
+        "recoveredBreaks": 0,
+        "remainingBreaksAfterFix": 0
+      },
+      {
+        "strategyId": "solo_builder",
+        "label": "Solo Builder",
+        "attacksFaced": 2,
+        "successfulBreaksAgainstIt": 2,
+        "recoveredBreaks": 0,
+        "remainingBreaksAfterFix": 2
+      }
+    ],
+    "swapAttackers": [
+      {
+        "strategyId": "pipeline_five_stage",
+        "label": "Pipeline Five-Stage",
+        "swapMatches": 1,
+        "successfulBreaks": 1
+      },
+      {
+        "strategyId": "solo_builder",
+        "label": "Solo Builder",
+        "swapMatches": 1,
+        "successfulBreaks": 0
+      }
+    ],
+    "fixers": [
+      {
+        "strategyId": "solo_builder",
+        "label": "Solo Builder",
+        "rounds": 1,
+        "confirmedFailures": 2,
+        "recoveredBreaks": 0,
+        "remainingBreaks": 2,
+        "retainedHiddenPasses": 0
+      }
+    ],
+    "arenas": [
+      {
+        "strategyId": "solo_builder",
+        "label": "Solo Builder",
+        "arenaEvents": 1,
+        "arenaPoints": 36,
+        "arenaWins": 12,
+        "arenaLosses": 0
+      },
+      {
+        "strategyId": "pipeline_five_stage",
+        "label": "Pipeline Five-Stage",
+        "arenaEvents": 1,
+        "arenaPoints": 0,
+        "arenaWins": 0,
+        "arenaLosses": 12
+      }
+    ],
+    "overall": [
+      {
+        "strategyId": "solo_builder",
+        "label": "Solo Builder",
+        "compositeScore": 32
+      },
+      {
+        "strategyId": "pipeline_five_stage",
+        "label": "Pipeline Five-Stage",
+        "compositeScore": 8
+      }
+    ]
+  },
+  "league": {
+    "id": "league-6d2348ec",
+    "createdAt": "2026-04-05T05:12:26.305Z",
+    "style": {
+      "id": "bibifi_showdown",
+      "label": "Build-It Break-It Fix-It",
+      "inspiration": "Build-it, Break-it, Fix-it secure software contest",
+      "sourceUrl": "https://www.usenix.org/conference/usenixsecurity20/presentation/greenberg",
+      "venueTheme": "security gauntlet",
+      "summary": "Teams score for shipping working code, earning verified breaks, and recovering functionality in a fix round after adversarial exchange.",
+      "scoring": {
+        "type": "build_break_fix",
+        "shipWeight": 1,
+        "breakWeight": 12,
+        "fixRecoveryWeight": 6,
+        "unresolvedBreakPenalty": 4
+      }
+    },
+    "standings": [
+      {
+        "team": "Pipeline Five-Stage",
+        "shipScore": 0,
+        "breakBonus": 12,
+        "fixRecovery": 0,
+        "unresolvedPenalty": 0,
+        "totalScore": 12
+      },
+      {
+        "team": "Solo Builder",
+        "shipScore": 2,
+        "breakBonus": 0,
+        "fixRecovery": 0,
+        "unresolvedPenalty": 8,
+        "totalScore": -6
+      }
+    ],
+    "highlights": [
+      "Top builder: Solo Builder with build score 2.",
+      "Best challenger: Pipeline Five-Stage with 1 successful swap breaks.",
+      "Toughest defense: Pipeline Five-Stage allowed 0 successful breaks before fix recovery.",
+      "Arena leader: Solo Builder earned 36 arena points."
+    ]
+  },
+  "season": {
+    "id": "season-3a380c9f",
+    "createdAt": "2026-04-05T05:12:26.305Z",
+    "circuitName": "Code Factory Grand Circuit",
+    "events": [
+      {
+        "round": 1,
+        "styleId": "icpc_sprint",
+        "title": "ICPC Sprint at Summit Hall",
+        "venue": {
+          "name": "Summit Hall",
+          "city": "Boulder",
+          "atmosphere": "onsite finals floor with frozen scoreboards and visible nerves"
+        },
+        "league": {
+          "id": "league-ba9dd6bc",
+          "createdAt": "2026-04-05T05:12:26.305Z",
+          "style": {
+            "id": "icpc_sprint",
+            "label": "ICPC Sprint",
+            "inspiration": "ICPC-style multi-problem onsite contest",
+            "sourceUrl": "https://ec.na.icpc.global/rules-info/",
+            "venueTheme": "onsite finals hall",
+            "summary": "Rank by problems solved, then lowest penalty time. Penalty is based on completion time plus failed-attempt cost.",
+            "scoring": {
+              "type": "solved_then_penalty",
+              "wrongAttemptPenaltyMinutes": 20,
+              "scoreboardFreezeMinutes": 60
+            }
+          },
+          "standings": [
+            {
+              "team": "Pipeline Five-Stage",
+              "solved": 0,
+              "penaltyMinutes": 41
+            },
+            {
+              "team": "Solo Builder",
+              "solved": 0,
+              "penaltyMinutes": 61
+            }
+          ],
+          "highlights": [
+            "Top builder: Solo Builder with build score 2.",
+            "Best challenger: Pipeline Five-Stage with 1 successful swap breaks.",
+            "Toughest defense: Pipeline Five-Stage allowed 0 successful breaks before fix recovery.",
+            "Arena leader: Solo Builder earned 36 arena points."
+          ]
+        },
+        "podium": [
+          {
+            "team": "Pipeline Five-Stage",
+            "solved": 0,
+            "penaltyMinutes": 41
+          },
+          {
+            "team": "Solo Builder",
+            "solved": 0,
+            "penaltyMinutes": 61
+          }
+        ]
+      },
+      {
+        "round": 2,
+        "styleId": "topcoder_marathon",
+        "title": "Topcoder Marathon at Ladder Dome",
+        "venue": {
+          "name": "Ladder Dome",
+          "city": "Seattle",
+          "atmosphere": "live ladder arena with constant provisional rank swings"
+        },
+        "league": {
+          "id": "league-37b6ad4b",
+          "createdAt": "2026-04-05T05:12:26.305Z",
+          "style": {
+            "id": "topcoder_marathon",
+            "label": "Topcoder Marathon",
+            "inspiration": "Topcoder provisional then hidden system testing",
+            "sourceUrl": "https://help.topcoder.com/hc/en-us/articles/24954728938011-Marathon-Matches-MM",
+            "venueTheme": "online ladder arena",
+            "summary": "Use provisional scores during the coding phase, then final standings after hidden-case system testing.",
+            "scoring": {
+              "type": "provisional_then_final",
+              "leaderboardMode": "iterative"
+            }
+          },
+          "standings": [
+            {
+              "team": "Solo Builder",
+              "provisionalScore": 1,
+              "finalScore": 2
+            },
+            {
+              "team": "Pipeline Five-Stage",
+              "provisionalScore": 0,
+              "finalScore": 0
+            }
+          ],
+          "highlights": [
+            "Top builder: Solo Builder with build score 2.",
+            "Best challenger: Pipeline Five-Stage with 1 successful swap breaks.",
+            "Toughest defense: Pipeline Five-Stage allowed 0 successful breaks before fix recovery.",
+            "Arena leader: Solo Builder earned 36 arena points."
+          ]
+        },
+        "podium": [
+          {
+            "team": "Solo Builder",
+            "provisionalScore": 1,
+            "finalScore": 2
+          },
+          {
+            "team": "Pipeline Five-Stage",
+            "provisionalScore": 0,
+            "finalScore": 0
+          }
+        ]
+      },
+      {
+        "round": 3,
+        "styleId": "srm_challenge",
+        "title": "SRM Challenge at Redline Theater",
+        "venue": {
+          "name": "Redline Theater",
+          "city": "Austin",
+          "atmosphere": "challenge phase pit with instant counterexample pressure"
+        },
+        "league": {
+          "id": "league-f0853e36",
+          "createdAt": "2026-04-05T05:12:26.305Z",
+          "style": {
+            "id": "srm_challenge",
+            "label": "SRM Challenge",
+            "inspiration": "Topcoder SRM challenge phase",
+            "sourceUrl": "https://help.topcoder.com/hc/en-us/articles/24954129102491-Single-Round-Matches-SRMs",
+            "venueTheme": "challenge phase arena",
+            "summary": "Score build performance, then award challenge bonuses for breaking opponent solutions during the attack phase.",
+            "scoring": {
+              "type": "build_plus_challenge",
+              "successfulChallengePoints": 10,
+              "failedChallengePenalty": 5
+            }
+          },
+          "standings": [
+            {
+              "team": "Pipeline Five-Stage",
+              "buildScore": 0,
+              "challengePoints": 10,
+              "totalScore": 10
+            },
+            {
+              "team": "Solo Builder",
+              "buildScore": 2,
+              "challengePoints": 0,
+              "totalScore": 2
+            }
+          ],
+          "highlights": [
+            "Top builder: Solo Builder with build score 2.",
+            "Best challenger: Pipeline Five-Stage with 1 successful swap breaks.",
+            "Toughest defense: Pipeline Five-Stage allowed 0 successful breaks before fix recovery.",
+            "Arena leader: Solo Builder earned 36 arena points."
+          ]
+        },
+        "podium": [
+          {
+            "team": "Pipeline Five-Stage",
+            "buildScore": 0,
+            "challengePoints": 10,
+            "totalScore": 10
+          },
+          {
+            "team": "Solo Builder",
+            "buildScore": 2,
+            "challengePoints": 0,
+            "totalScore": 2
+          }
+        ]
+      },
+      {
+        "round": 4,
+        "styleId": "bibifi_showdown",
+        "title": "Build-It Break-It Fix-It at Patchworks Lab",
+        "venue": {
+          "name": "Patchworks Lab",
+          "city": "Pittsburgh",
+          "atmosphere": "security gauntlet focused on break-fix survival"
+        },
+        "league": {
+          "id": "league-f2e76299",
+          "createdAt": "2026-04-05T05:12:26.305Z",
+          "style": {
+            "id": "bibifi_showdown",
+            "label": "Build-It Break-It Fix-It",
+            "inspiration": "Build-it, Break-it, Fix-it secure software contest",
+            "sourceUrl": "https://www.usenix.org/conference/usenixsecurity20/presentation/greenberg",
+            "venueTheme": "security gauntlet",
+            "summary": "Teams score for shipping working code, earning verified breaks, and recovering functionality in a fix round after adversarial exchange.",
+            "scoring": {
+              "type": "build_break_fix",
+              "shipWeight": 1,
+              "breakWeight": 12,
+              "fixRecoveryWeight": 6,
+              "unresolvedBreakPenalty": 4
+            }
+          },
+          "standings": [
+            {
+              "team": "Pipeline Five-Stage",
+              "shipScore": 0,
+              "breakBonus": 12,
+              "fixRecovery": 0,
+              "unresolvedPenalty": 0,
+              "totalScore": 12
+            },
+            {
+              "team": "Solo Builder",
+              "shipScore": 2,
+              "breakBonus": 0,
+              "fixRecovery": 0,
+              "unresolvedPenalty": 8,
+              "totalScore": -6
+            }
+          ],
+          "highlights": [
+            "Top builder: Solo Builder with build score 2.",
+            "Best challenger: Pipeline Five-Stage with 1 successful swap breaks.",
+            "Toughest defense: Pipeline Five-Stage allowed 0 successful breaks before fix recovery.",
+            "Arena leader: Solo Builder earned 36 arena points."
+          ]
+        },
+        "podium": [
+          {
+            "team": "Pipeline Five-Stage",
+            "shipScore": 0,
+            "breakBonus": 12,
+            "fixRecovery": 0,
+            "unresolvedPenalty": 0,
+            "totalScore": 12
+          },
+          {
+            "team": "Solo Builder",
+            "shipScore": 2,
+            "breakBonus": 0,
+            "fixRecovery": 0,
+            "unresolvedPenalty": 8,
+            "totalScore": -6
+          }
+        ]
+      },
+      {
+        "round": 5,
+        "styleId": "aixcc_patch_race",
+        "title": "AIxCC Patch Race at Autonomy Annex",
+        "venue": {
+          "name": "Autonomy Annex",
+          "city": "Las Vegas",
+          "atmosphere": "autonomous offense-defense room with nonstop arena telemetry"
+        },
+        "league": {
+          "id": "league-9321bb8d",
+          "createdAt": "2026-04-05T05:12:26.305Z",
+          "style": {
+            "id": "aixcc_patch_race",
+            "label": "AIxCC Patch Race",
+            "inspiration": "DARPA AI Cyber Challenge patch-and-attack scoring",
+            "sourceUrl": "https://www.darpa.mil/research/programs/cyber-grand-challenge",
+            "venueTheme": "autonomous offense-defense arena",
+            "summary": "Prioritize maintaining functionality while patching vulnerabilities quickly, with secondary credit for finding and exploiting weaknesses.",
+            "scoring": {
+              "type": "availability_security_patch",
+              "patchWeight": 3,
+              "breakWeight": 1,
+              "availabilityWeight": 2
+            }
+          },
+          "standings": [
+            {
+              "team": "Solo Builder",
+              "availabilityScore": 4,
+              "patchScore": 0,
+              "breakScore": 0,
+              "arenaScore": 36,
+              "totalScore": 36
+            },
+            {
+              "team": "Pipeline Five-Stage",
+              "availabilityScore": 0,
+              "patchScore": 0,
+              "breakScore": 1,
+              "arenaScore": 0,
+              "totalScore": 1
+            }
+          ],
+          "highlights": [
+            "Top builder: Solo Builder with build score 2.",
+            "Best challenger: Pipeline Five-Stage with 1 successful swap breaks.",
+            "Toughest defense: Pipeline Five-Stage allowed 0 successful breaks before fix recovery.",
+            "Arena leader: Solo Builder earned 36 arena points."
+          ]
+        },
+        "podium": [
+          {
+            "team": "Solo Builder",
+            "availabilityScore": 4,
+            "patchScore": 0,
+            "breakScore": 0,
+            "arenaScore": 36,
+            "totalScore": 36
+          },
+          {
+            "team": "Pipeline Five-Stage",
+            "availabilityScore": 0,
+            "patchScore": 0,
+            "breakScore": 1,
+            "arenaScore": 0,
+            "totalScore": 1
+          }
+        ]
+      }
+    ],
+    "overallStandings": [
+      {
+        "team": "Pipeline Five-Stage",
+        "seasonPoints": 44,
+        "eventWins": 3,
+        "podiums": 5
+      },
+      {
+        "team": "Solo Builder",
+        "seasonPoints": 41,
+        "eventWins": 2,
+        "podiums": 5
+      }
+    ],
+    "teamCards": [
+      {
+        "strategyId": "solo_builder",
+        "strategyLabel": "Solo Builder",
+        "teamName": "Solo Builder",
+        "archetype": "agent-team",
+        "backstory": "No custom backstory assigned for this run.",
+        "motto": "Ship working code."
+      },
+      {
+        "strategyId": "pipeline_five_stage",
+        "strategyLabel": "Pipeline Five-Stage",
+        "teamName": "Pipeline Five-Stage",
+        "archetype": "agent-team",
+        "backstory": "No custom backstory assigned for this run.",
+        "motto": "Ship working code."
+      }
+    ],
+    "rivalries": [
+      {
+        "rivalry": "Pipeline Five-Stage vs Solo Builder",
+        "totalSwapBreaks": 1
+      }
+    ]
+  },
+  "personaComparison": {
+    "batchId": "arena-smoke",
+    "baselineOverall": [
+      {
+        "strategyId": "solo_builder",
+        "label": "Solo Builder",
+        "compositeScore": 32
+      },
+      {
+        "strategyId": "pipeline_five_stage",
+        "label": "Pipeline Five-Stage",
+        "compositeScore": 8
+      }
+    ],
+    "personaOverall": [
+      {
+        "strategyId": "solo_builder",
+        "label": "Solo Builder",
+        "compositeScore": 46
+      },
+      {
+        "strategyId": "pipeline_five_stage",
+        "label": "Pipeline Five-Stage",
+        "compositeScore": 0
+      }
+    ]
+  }
+}
