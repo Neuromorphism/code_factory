@@ -23,6 +23,18 @@ function formatStrategyContext(strategy, phase) {
 
   return [
     `Team system: ${strategy.label}.`,
+    strategy.topology ? `Team topology: ${strategy.topology}.` : "",
+    strategy.taskDistribution === "broadcast_all"
+      ? "Task distribution: every team member can see the full task bundle."
+      : "",
+    strategy.memoryModel ? `Coordination memory: ${strategy.memoryModel}.` : "",
+    strategy.coordinationProtocol ? `Coordination protocol: ${strategy.coordinationProtocol}.` : "",
+    strategy.topology === "decentralized"
+      ? "There is no central coordinator. Read the shared coordination substrate, contribute the highest-value delta, and leave mergeable notes for peers."
+      : "",
+    strategy.internalLoop?.length
+      ? `Internal loop before answering: ${strategy.internalLoop.join(" -> ")}.`
+      : "",
     `Design method: ${strategy.designMethod}.`,
     `Reasoning style: ${strategy.reasoningStyle}.`,
     strategy.promptDiscipline ? `Prompt discipline: ${strategy.promptDiscipline}.` : "",
@@ -35,6 +47,69 @@ function formatStrategyContext(strategy, phase) {
   ]
     .filter(Boolean)
     .join("\n");
+}
+
+function createSharedBoard() {
+  return {
+    summaries: [],
+    designs: [],
+    edgeCases: [],
+    milestones: [],
+    tests: [],
+    issues: [],
+    attacks: [],
+    changes: [],
+    cases: []
+  };
+}
+
+function pushUniqueEntries(list, values, limit = 12) {
+  const next = [...list];
+
+  for (const value of values ?? []) {
+    const normalized = String(value ?? "").trim();
+    if (!normalized || next.includes(normalized)) {
+      continue;
+    }
+    next.push(normalized);
+  }
+
+  return next.slice(0, limit);
+}
+
+function updateBoard(board, phase, result) {
+  board.summaries = pushUniqueEntries(board.summaries, [
+    result?.summary ? `${phase.role}: ${result.summary}` : ""
+  ]);
+  board.designs = pushUniqueEntries(board.designs, [result?.design, ...(result?.weakPoints || [])]);
+  board.edgeCases = pushUniqueEntries(board.edgeCases, result?.edgeCases || []);
+  board.milestones = pushUniqueEntries(board.milestones, result?.milestones || []);
+  board.tests = pushUniqueEntries(board.tests, result?.tests || []);
+  board.issues = pushUniqueEntries(board.issues, result?.issues || []);
+  board.attacks = pushUniqueEntries(board.attacks, result?.attacks || []);
+  board.changes = pushUniqueEntries(board.changes, result?.changes || []);
+  board.cases = dedupeCases(board.cases.concat(result?.cases || []));
+}
+
+function formatBoard(board) {
+  const payload = {
+    summaries: board.summaries,
+    designs: board.designs,
+    edgeCases: board.edgeCases,
+    milestones: board.milestones,
+    tests: board.tests,
+    issues: board.issues,
+    attacks: board.attacks,
+    changes: board.changes,
+    cases: board.cases
+  };
+
+  const hasContent = Object.values(payload).some((value) => Array.isArray(value) && value.length);
+  if (!hasContent) {
+    return "";
+  }
+
+  return `Shared coordination substrate:\n${JSON.stringify(payload, null, 2)}`;
 }
 
 function formatPersona(teamProfile, phase) {
@@ -110,6 +185,7 @@ async function generateJson(client, prompt, fallback = {}) {
 
 async function runBuildStrategy(strategy, challenge, client, options = {}) {
   const transcript = [];
+  const sharedBoard = createSharedBoard();
   let planSummary = "";
   let qaNotes = [];
   let reviewerNotes = [];
@@ -118,12 +194,14 @@ async function runBuildStrategy(strategy, challenge, client, options = {}) {
   const teamProfile = options.teamProfile ?? null;
 
   for (const phase of strategy.phases) {
+    const boardContext = formatBoard(sharedBoard);
     const sharedContext = [
       `You are the ${phase.role} in a software delivery team.`,
       formatStrategyContext(strategy, phase),
       formatPersona(teamProfile, phase),
       `Challenge: ${challenge.label}`,
-      challenge.buildPrompt
+      challenge.buildPrompt,
+      boardContext
     ]
       .filter(Boolean)
       .join("\n\n");
@@ -146,6 +224,7 @@ async function runBuildStrategy(strategy, challenge, client, options = {}) {
 
       const result = await generateJson(client, prompt, { code: "", risks: [] });
       currentCode = sanitizeCode(result.code);
+      updateBoard(sharedBoard, phase, result);
       transcript.push({ phase: phase.id, role: phase.role, action: phase.action, result });
       continue;
     }
@@ -167,6 +246,7 @@ async function runBuildStrategy(strategy, challenge, client, options = {}) {
 
       const result = await generateJson(client, prompt, { code: currentCode, changes: [] });
       currentCode = sanitizeCode(result.code);
+      updateBoard(sharedBoard, phase, result);
       transcript.push({ phase: phase.id, role: phase.role, action: phase.action, result });
       continue;
     }
@@ -184,6 +264,7 @@ async function runBuildStrategy(strategy, challenge, client, options = {}) {
       );
       const result = await generateJson(client, prompt, { design: "", edgeCases: [] });
       planSummary += `${phase.role}: ${result.summary}\nDesign: ${result.design}\n`;
+      updateBoard(sharedBoard, phase, result);
       transcript.push({ phase: phase.id, role: phase.role, action: phase.action, result });
       continue;
     }
@@ -197,6 +278,7 @@ async function runBuildStrategy(strategy, challenge, client, options = {}) {
       );
       const result = await generateJson(client, prompt, { milestones: [], risks: [] });
       planSummary += `${phase.role}: ${result.summary}\nMilestones: ${(result.milestones || []).join("; ")}\n`;
+      updateBoard(sharedBoard, phase, result);
       transcript.push({ phase: phase.id, role: phase.role, action: phase.action, result });
       continue;
     }
@@ -213,6 +295,7 @@ async function runBuildStrategy(strategy, challenge, client, options = {}) {
       );
       const result = await generateJson(client, prompt, { tests: [], risks: [] });
       qaNotes = [...qaNotes, ...(result.tests || []), ...(result.risks || [])];
+      updateBoard(sharedBoard, phase, result);
       transcript.push({ phase: phase.id, role: phase.role, action: phase.action, result });
       continue;
     }
@@ -231,6 +314,7 @@ async function runBuildStrategy(strategy, challenge, client, options = {}) {
       );
       const result = await generateJson(client, prompt, { issues: [], decision: "needs_work" });
       reviewerNotes = [...reviewerNotes, ...(result.issues || [])];
+      updateBoard(sharedBoard, phase, result);
       transcript.push({ phase: phase.id, role: phase.role, action: phase.action, result });
       continue;
     }
@@ -246,6 +330,7 @@ async function runBuildStrategy(strategy, challenge, client, options = {}) {
       );
       const result = await generateJson(client, prompt, { attacks: [], risks: [] });
       attackNotes = [...attackNotes, ...(result.attacks || [])];
+      updateBoard(sharedBoard, phase, result);
       transcript.push({ phase: phase.id, role: phase.role, action: phase.action, result });
     }
   }
@@ -268,11 +353,13 @@ async function runBuildStrategy(strategy, challenge, client, options = {}) {
 
 async function runAttackStrategy(strategy, challenge, targetCode, client, options = {}) {
   const transcript = [];
+  const sharedBoard = createSharedBoard();
   const analysisNotes = [];
   let candidatePool = [];
   const teamProfile = options.teamProfile ?? null;
 
   for (const phase of strategy.phases) {
+    const boardContext = formatBoard(sharedBoard);
     const sharedContext = [
       `You are the ${phase.role} in an adversarial software evaluation team.`,
       formatStrategyContext(strategy, phase),
@@ -280,7 +367,8 @@ async function runAttackStrategy(strategy, challenge, targetCode, client, option
       `Challenge: ${challenge.label}`,
       challenge.buildPrompt,
       `Target implementation:\n${targetCode}`,
-      `Visible examples:\n${JSON.stringify(challenge.visibleCases, null, 2)}`
+      `Visible examples:\n${JSON.stringify(challenge.visibleCases, null, 2)}`,
+      boardContext
     ]
       .filter(Boolean)
       .join("\n\n");
@@ -301,6 +389,7 @@ async function runAttackStrategy(strategy, challenge, targetCode, client, option
       const result = await generateJson(client, prompt, { findings: [], risks: [] });
       analysisNotes.push(result.summary, ...(result.weakPoints || []));
       candidatePool = dedupeCases(candidatePool.concat(result.cases || []));
+      updateBoard(sharedBoard, phase, result);
       transcript.push({ phase: phase.id, role: phase.role, action: phase.action, result });
       continue;
     }
@@ -321,6 +410,7 @@ async function runAttackStrategy(strategy, challenge, targetCode, client, option
       );
       const result = await generateJson(client, prompt, { cases: [] });
       candidatePool = dedupeCases(candidatePool.concat(result.cases || []));
+      updateBoard(sharedBoard, phase, result);
       transcript.push({ phase: phase.id, role: phase.role, action: phase.action, result });
       continue;
     }
@@ -337,6 +427,7 @@ async function runAttackStrategy(strategy, challenge, targetCode, client, option
       );
       const result = await generateJson(client, prompt, { cases: candidatePool, discarded: [] });
       candidatePool = dedupeCases((result.cases || []).length ? result.cases : candidatePool);
+      updateBoard(sharedBoard, phase, result);
       transcript.push({ phase: phase.id, role: phase.role, action: phase.action, result });
     }
   }

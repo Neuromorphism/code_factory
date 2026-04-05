@@ -1,0 +1,835 @@
+{
+  "kind": "tournament_artifact",
+  "batchId": "distributed-smoke",
+  "createdAt": "2026-04-05T15:13:50.705Z",
+  "tournamentId": "tournament-4df42a73",
+  "enablePersonas": false,
+  "enableFixRounds": true,
+  "tournamentSummary": {
+    "builders": [
+      {
+        "strategyId": "universalist_solo",
+        "label": "Universalist Solo",
+        "tasks": 1,
+        "totalBuildScore": 10,
+        "hiddenPasses": 2,
+        "visiblePasses": 2,
+        "totalDurationMs": 6315
+      },
+      {
+        "strategyId": "gossip_mesh",
+        "label": "Gossip Mesh",
+        "tasks": 1,
+        "totalBuildScore": 10,
+        "hiddenPasses": 2,
+        "visiblePasses": 2,
+        "totalDurationMs": 11270
+      },
+      {
+        "strategyId": "consensus_bundle_collective",
+        "label": "Consensus Bundle Collective",
+        "tasks": 1,
+        "totalBuildScore": 10,
+        "hiddenPasses": 2,
+        "visiblePasses": 2,
+        "totalDurationMs": 9520
+      },
+      {
+        "strategyId": "blackboard_collective",
+        "label": "Blackboard Collective",
+        "tasks": 1,
+        "totalBuildScore": 3,
+        "hiddenPasses": 1,
+        "visiblePasses": 0,
+        "totalDurationMs": 13424
+      },
+      {
+        "strategyId": "crdt_mesh",
+        "label": "CRDT Mesh",
+        "tasks": 1,
+        "totalBuildScore": 0,
+        "hiddenPasses": 0,
+        "visiblePasses": 0,
+        "totalDurationMs": 9551
+      }
+    ],
+    "breakers": [
+      {
+        "strategyId": "gossip_breaker_mesh",
+        "label": "Gossip Breaker Mesh",
+        "attempts": 5,
+        "successfulBreaks": 3,
+        "family": "breaker",
+        "totalDurationMs": 28536
+      },
+      {
+        "strategyId": "stigmergy_test_hive",
+        "label": "Stigmergy Test Hive",
+        "attempts": 5,
+        "successfulBreaks": 0,
+        "family": "tester",
+        "totalDurationMs": 35621
+      }
+    ],
+    "defenses": [
+      {
+        "strategyId": "universalist_solo",
+        "label": "Universalist Solo",
+        "attacksFaced": 6,
+        "successfulBreaksAgainstIt": 0,
+        "recoveredBreaks": 0,
+        "remainingBreaksAfterFix": 0
+      },
+      {
+        "strategyId": "crdt_mesh",
+        "label": "CRDT Mesh",
+        "attacksFaced": 6,
+        "successfulBreaksAgainstIt": 0,
+        "recoveredBreaks": 0,
+        "remainingBreaksAfterFix": 0
+      },
+      {
+        "strategyId": "consensus_bundle_collective",
+        "label": "Consensus Bundle Collective",
+        "attacksFaced": 6,
+        "successfulBreaksAgainstIt": 0,
+        "recoveredBreaks": 0,
+        "remainingBreaksAfterFix": 0
+      },
+      {
+        "strategyId": "gossip_mesh",
+        "label": "Gossip Mesh",
+        "attacksFaced": 6,
+        "successfulBreaksAgainstIt": 4,
+        "recoveredBreaks": 0,
+        "remainingBreaksAfterFix": 4
+      },
+      {
+        "strategyId": "blackboard_collective",
+        "label": "Blackboard Collective",
+        "attacksFaced": 6,
+        "successfulBreaksAgainstIt": 6,
+        "recoveredBreaks": 6,
+        "remainingBreaksAfterFix": 0
+      }
+    ],
+    "swapAttackers": [
+      {
+        "strategyId": "gossip_mesh",
+        "label": "Gossip Mesh",
+        "swapMatches": 4,
+        "successfulBreaks": 3
+      },
+      {
+        "strategyId": "consensus_bundle_collective",
+        "label": "Consensus Bundle Collective",
+        "swapMatches": 4,
+        "successfulBreaks": 3
+      },
+      {
+        "strategyId": "crdt_mesh",
+        "label": "CRDT Mesh",
+        "swapMatches": 4,
+        "successfulBreaks": 1
+      },
+      {
+        "strategyId": "universalist_solo",
+        "label": "Universalist Solo",
+        "swapMatches": 4,
+        "successfulBreaks": 0
+      },
+      {
+        "strategyId": "blackboard_collective",
+        "label": "Blackboard Collective",
+        "swapMatches": 4,
+        "successfulBreaks": 0
+      }
+    ],
+    "fixers": [
+      {
+        "strategyId": "blackboard_collective",
+        "label": "Blackboard Collective",
+        "rounds": 1,
+        "confirmedFailures": 6,
+        "recoveredBreaks": 6,
+        "remainingBreaks": 0,
+        "retainedHiddenPasses": 2
+      },
+      {
+        "strategyId": "gossip_mesh",
+        "label": "Gossip Mesh",
+        "rounds": 1,
+        "confirmedFailures": 4,
+        "recoveredBreaks": 0,
+        "remainingBreaks": 4,
+        "retainedHiddenPasses": 0
+      }
+    ],
+    "arenas": [
+      {
+        "strategyId": "universalist_solo",
+        "label": "Universalist Solo",
+        "arenaEvents": 0,
+        "arenaPoints": 0,
+        "arenaWins": 0,
+        "arenaLosses": 0
+      },
+      {
+        "strategyId": "blackboard_collective",
+        "label": "Blackboard Collective",
+        "arenaEvents": 0,
+        "arenaPoints": 0,
+        "arenaWins": 0,
+        "arenaLosses": 0
+      },
+      {
+        "strategyId": "gossip_mesh",
+        "label": "Gossip Mesh",
+        "arenaEvents": 0,
+        "arenaPoints": 0,
+        "arenaWins": 0,
+        "arenaLosses": 0
+      },
+      {
+        "strategyId": "crdt_mesh",
+        "label": "CRDT Mesh",
+        "arenaEvents": 0,
+        "arenaPoints": 0,
+        "arenaWins": 0,
+        "arenaLosses": 0
+      },
+      {
+        "strategyId": "consensus_bundle_collective",
+        "label": "Consensus Bundle Collective",
+        "arenaEvents": 0,
+        "arenaPoints": 0,
+        "arenaWins": 0,
+        "arenaLosses": 0
+      }
+    ],
+    "overall": [
+      {
+        "strategyId": "consensus_bundle_collective",
+        "label": "Consensus Bundle Collective",
+        "compositeScore": 34
+      },
+      {
+        "strategyId": "blackboard_collective",
+        "label": "Blackboard Collective",
+        "compositeScore": 33
+      },
+      {
+        "strategyId": "gossip_mesh",
+        "label": "Gossip Mesh",
+        "compositeScore": 22
+      },
+      {
+        "strategyId": "universalist_solo",
+        "label": "Universalist Solo",
+        "compositeScore": 10
+      },
+      {
+        "strategyId": "crdt_mesh",
+        "label": "CRDT Mesh",
+        "compositeScore": 8
+      }
+    ]
+  },
+  "league": {
+    "id": "league-ab4a947d",
+    "createdAt": "2026-04-05T15:13:50.708Z",
+    "style": {
+      "id": "icpc_sprint",
+      "label": "ICPC Sprint",
+      "inspiration": "ICPC-style multi-problem onsite contest",
+      "sourceUrl": "https://ec.na.icpc.global/rules-info/",
+      "venueTheme": "onsite finals hall",
+      "summary": "Rank by problems solved, then lowest penalty time. Penalty is based on completion time plus failed-attempt cost.",
+      "scoring": {
+        "type": "solved_then_penalty",
+        "wrongAttemptPenaltyMinutes": 20,
+        "scoreboardFreezeMinutes": 60
+      }
+    },
+    "standings": [
+      {
+        "team": "Universalist Solo",
+        "solved": 1,
+        "penaltyMinutes": 1
+      },
+      {
+        "team": "Gossip Mesh",
+        "solved": 1,
+        "penaltyMinutes": 1
+      },
+      {
+        "team": "Consensus Bundle Collective",
+        "solved": 1,
+        "penaltyMinutes": 1
+      },
+      {
+        "team": "CRDT Mesh",
+        "solved": 0,
+        "penaltyMinutes": 41
+      },
+      {
+        "team": "Blackboard Collective",
+        "solved": 0,
+        "penaltyMinutes": 61
+      }
+    ],
+    "highlights": [
+      "Top builder: Universalist Solo with build score 10.",
+      "Best challenger: Gossip Mesh with 3 successful swap breaks.",
+      "Toughest defense: Universalist Solo allowed 0 successful breaks before fix recovery.",
+      "Arena leader: Universalist Solo earned 0 arena points."
+    ]
+  },
+  "season": {
+    "id": "season-a5acbae5",
+    "createdAt": "2026-04-05T15:13:50.711Z",
+    "circuitName": "Code Factory Grand Circuit",
+    "events": [
+      {
+        "round": 1,
+        "styleId": "icpc_sprint",
+        "title": "ICPC Sprint at Summit Hall",
+        "venue": {
+          "name": "Summit Hall",
+          "city": "Boulder",
+          "atmosphere": "onsite finals floor with frozen scoreboards and visible nerves"
+        },
+        "league": {
+          "id": "league-6aa1d22c",
+          "createdAt": "2026-04-05T15:13:50.709Z",
+          "style": {
+            "id": "icpc_sprint",
+            "label": "ICPC Sprint",
+            "inspiration": "ICPC-style multi-problem onsite contest",
+            "sourceUrl": "https://ec.na.icpc.global/rules-info/",
+            "venueTheme": "onsite finals hall",
+            "summary": "Rank by problems solved, then lowest penalty time. Penalty is based on completion time plus failed-attempt cost.",
+            "scoring": {
+              "type": "solved_then_penalty",
+              "wrongAttemptPenaltyMinutes": 20,
+              "scoreboardFreezeMinutes": 60
+            }
+          },
+          "standings": [
+            {
+              "team": "Universalist Solo",
+              "solved": 1,
+              "penaltyMinutes": 1
+            },
+            {
+              "team": "Gossip Mesh",
+              "solved": 1,
+              "penaltyMinutes": 1
+            },
+            {
+              "team": "Consensus Bundle Collective",
+              "solved": 1,
+              "penaltyMinutes": 1
+            },
+            {
+              "team": "CRDT Mesh",
+              "solved": 0,
+              "penaltyMinutes": 41
+            },
+            {
+              "team": "Blackboard Collective",
+              "solved": 0,
+              "penaltyMinutes": 61
+            }
+          ],
+          "highlights": [
+            "Top builder: Universalist Solo with build score 10.",
+            "Best challenger: Gossip Mesh with 3 successful swap breaks.",
+            "Toughest defense: Universalist Solo allowed 0 successful breaks before fix recovery.",
+            "Arena leader: Universalist Solo earned 0 arena points."
+          ]
+        },
+        "podium": [
+          {
+            "team": "Universalist Solo",
+            "solved": 1,
+            "penaltyMinutes": 1
+          },
+          {
+            "team": "Gossip Mesh",
+            "solved": 1,
+            "penaltyMinutes": 1
+          },
+          {
+            "team": "Consensus Bundle Collective",
+            "solved": 1,
+            "penaltyMinutes": 1
+          }
+        ]
+      },
+      {
+        "round": 2,
+        "styleId": "topcoder_marathon",
+        "title": "Topcoder Marathon at Ladder Dome",
+        "venue": {
+          "name": "Ladder Dome",
+          "city": "Seattle",
+          "atmosphere": "live ladder arena with constant provisional rank swings"
+        },
+        "league": {
+          "id": "league-a7d6ea3d",
+          "createdAt": "2026-04-05T15:13:50.710Z",
+          "style": {
+            "id": "topcoder_marathon",
+            "label": "Topcoder Marathon",
+            "inspiration": "Topcoder provisional then hidden system testing",
+            "sourceUrl": "https://help.topcoder.com/hc/en-us/articles/24954728938011-Marathon-Matches-MM",
+            "venueTheme": "online ladder arena",
+            "summary": "Use provisional scores during the coding phase, then final standings after hidden-case system testing.",
+            "scoring": {
+              "type": "provisional_then_final",
+              "leaderboardMode": "iterative"
+            }
+          },
+          "standings": [
+            {
+              "team": "Universalist Solo",
+              "provisionalScore": 2,
+              "finalScore": 10
+            },
+            {
+              "team": "Gossip Mesh",
+              "provisionalScore": 2,
+              "finalScore": 10
+            },
+            {
+              "team": "Consensus Bundle Collective",
+              "provisionalScore": 2,
+              "finalScore": 10
+            },
+            {
+              "team": "Blackboard Collective",
+              "provisionalScore": 0,
+              "finalScore": 3
+            },
+            {
+              "team": "CRDT Mesh",
+              "provisionalScore": 0,
+              "finalScore": 0
+            }
+          ],
+          "highlights": [
+            "Top builder: Universalist Solo with build score 10.",
+            "Best challenger: Gossip Mesh with 3 successful swap breaks.",
+            "Toughest defense: Universalist Solo allowed 0 successful breaks before fix recovery.",
+            "Arena leader: Universalist Solo earned 0 arena points."
+          ]
+        },
+        "podium": [
+          {
+            "team": "Universalist Solo",
+            "provisionalScore": 2,
+            "finalScore": 10
+          },
+          {
+            "team": "Gossip Mesh",
+            "provisionalScore": 2,
+            "finalScore": 10
+          },
+          {
+            "team": "Consensus Bundle Collective",
+            "provisionalScore": 2,
+            "finalScore": 10
+          }
+        ]
+      },
+      {
+        "round": 3,
+        "styleId": "srm_challenge",
+        "title": "SRM Challenge at Redline Theater",
+        "venue": {
+          "name": "Redline Theater",
+          "city": "Austin",
+          "atmosphere": "challenge phase pit with instant counterexample pressure"
+        },
+        "league": {
+          "id": "league-0b974697",
+          "createdAt": "2026-04-05T15:13:50.710Z",
+          "style": {
+            "id": "srm_challenge",
+            "label": "SRM Challenge",
+            "inspiration": "Topcoder SRM challenge phase",
+            "sourceUrl": "https://help.topcoder.com/hc/en-us/articles/24954129102491-Single-Round-Matches-SRMs",
+            "venueTheme": "challenge phase arena",
+            "summary": "Score build performance, then award challenge bonuses for breaking opponent solutions during the attack phase.",
+            "scoring": {
+              "type": "build_plus_challenge",
+              "successfulChallengePoints": 10,
+              "failedChallengePenalty": 5
+            }
+          },
+          "standings": [
+            {
+              "team": "Gossip Mesh",
+              "buildScore": 10,
+              "challengePoints": 30,
+              "totalScore": 40
+            },
+            {
+              "team": "Consensus Bundle Collective",
+              "buildScore": 10,
+              "challengePoints": 30,
+              "totalScore": 40
+            },
+            {
+              "team": "Universalist Solo",
+              "buildScore": 10,
+              "challengePoints": 0,
+              "totalScore": 10
+            },
+            {
+              "team": "CRDT Mesh",
+              "buildScore": 0,
+              "challengePoints": 10,
+              "totalScore": 10
+            },
+            {
+              "team": "Blackboard Collective",
+              "buildScore": 3,
+              "challengePoints": 0,
+              "totalScore": 3
+            }
+          ],
+          "highlights": [
+            "Top builder: Universalist Solo with build score 10.",
+            "Best challenger: Gossip Mesh with 3 successful swap breaks.",
+            "Toughest defense: Universalist Solo allowed 0 successful breaks before fix recovery.",
+            "Arena leader: Universalist Solo earned 0 arena points."
+          ]
+        },
+        "podium": [
+          {
+            "team": "Gossip Mesh",
+            "buildScore": 10,
+            "challengePoints": 30,
+            "totalScore": 40
+          },
+          {
+            "team": "Consensus Bundle Collective",
+            "buildScore": 10,
+            "challengePoints": 30,
+            "totalScore": 40
+          },
+          {
+            "team": "Universalist Solo",
+            "buildScore": 10,
+            "challengePoints": 0,
+            "totalScore": 10
+          }
+        ]
+      },
+      {
+        "round": 4,
+        "styleId": "bibifi_showdown",
+        "title": "Build-It Break-It Fix-It at Patchworks Lab",
+        "venue": {
+          "name": "Patchworks Lab",
+          "city": "Pittsburgh",
+          "atmosphere": "security gauntlet focused on break-fix survival"
+        },
+        "league": {
+          "id": "league-7529f57b",
+          "createdAt": "2026-04-05T15:13:50.711Z",
+          "style": {
+            "id": "bibifi_showdown",
+            "label": "Build-It Break-It Fix-It",
+            "inspiration": "Build-it, Break-it, Fix-it secure software contest",
+            "sourceUrl": "https://www.usenix.org/conference/usenixsecurity20/presentation/greenberg",
+            "venueTheme": "security gauntlet",
+            "summary": "Teams score for shipping working code, earning verified breaks, and recovering functionality in a fix round after adversarial exchange.",
+            "scoring": {
+              "type": "build_break_fix",
+              "shipWeight": 1,
+              "breakWeight": 12,
+              "fixRecoveryWeight": 6,
+              "unresolvedBreakPenalty": 4
+            }
+          },
+          "standings": [
+            {
+              "team": "Consensus Bundle Collective",
+              "shipScore": 10,
+              "breakBonus": 36,
+              "fixRecovery": 0,
+              "unresolvedPenalty": 0,
+              "totalScore": 46
+            },
+            {
+              "team": "Blackboard Collective",
+              "shipScore": 3,
+              "breakBonus": 0,
+              "fixRecovery": 36,
+              "unresolvedPenalty": 0,
+              "totalScore": 39
+            },
+            {
+              "team": "Gossip Mesh",
+              "shipScore": 10,
+              "breakBonus": 36,
+              "fixRecovery": 0,
+              "unresolvedPenalty": 16,
+              "totalScore": 30
+            },
+            {
+              "team": "CRDT Mesh",
+              "shipScore": 0,
+              "breakBonus": 12,
+              "fixRecovery": 0,
+              "unresolvedPenalty": 0,
+              "totalScore": 12
+            },
+            {
+              "team": "Universalist Solo",
+              "shipScore": 10,
+              "breakBonus": 0,
+              "fixRecovery": 0,
+              "unresolvedPenalty": 0,
+              "totalScore": 10
+            }
+          ],
+          "highlights": [
+            "Top builder: Universalist Solo with build score 10.",
+            "Best challenger: Gossip Mesh with 3 successful swap breaks.",
+            "Toughest defense: Universalist Solo allowed 0 successful breaks before fix recovery.",
+            "Arena leader: Universalist Solo earned 0 arena points."
+          ]
+        },
+        "podium": [
+          {
+            "team": "Consensus Bundle Collective",
+            "shipScore": 10,
+            "breakBonus": 36,
+            "fixRecovery": 0,
+            "unresolvedPenalty": 0,
+            "totalScore": 46
+          },
+          {
+            "team": "Blackboard Collective",
+            "shipScore": 3,
+            "breakBonus": 0,
+            "fixRecovery": 36,
+            "unresolvedPenalty": 0,
+            "totalScore": 39
+          },
+          {
+            "team": "Gossip Mesh",
+            "shipScore": 10,
+            "breakBonus": 36,
+            "fixRecovery": 0,
+            "unresolvedPenalty": 16,
+            "totalScore": 30
+          }
+        ]
+      },
+      {
+        "round": 5,
+        "styleId": "aixcc_patch_race",
+        "title": "AIxCC Patch Race at Autonomy Annex",
+        "venue": {
+          "name": "Autonomy Annex",
+          "city": "Las Vegas",
+          "atmosphere": "autonomous offense-defense room with nonstop arena telemetry"
+        },
+        "league": {
+          "id": "league-9dced017",
+          "createdAt": "2026-04-05T15:13:50.711Z",
+          "style": {
+            "id": "aixcc_patch_race",
+            "label": "AIxCC Patch Race",
+            "inspiration": "DARPA AI Cyber Challenge patch-and-attack scoring",
+            "sourceUrl": "https://www.darpa.mil/research/programs/cyber-grand-challenge",
+            "venueTheme": "autonomous offense-defense arena",
+            "summary": "Prioritize maintaining functionality while patching vulnerabilities quickly, with secondary credit for finding and exploiting weaknesses.",
+            "scoring": {
+              "type": "availability_security_patch",
+              "patchWeight": 3,
+              "breakWeight": 1,
+              "availabilityWeight": 2
+            }
+          },
+          "standings": [
+            {
+              "team": "Blackboard Collective",
+              "availabilityScore": 6,
+              "patchScore": 18,
+              "breakScore": 0,
+              "arenaScore": 0,
+              "totalScore": 24
+            },
+            {
+              "team": "Consensus Bundle Collective",
+              "availabilityScore": 20,
+              "patchScore": 0,
+              "breakScore": 3,
+              "arenaScore": 0,
+              "totalScore": 23
+            },
+            {
+              "team": "Universalist Solo",
+              "availabilityScore": 20,
+              "patchScore": 0,
+              "breakScore": 0,
+              "arenaScore": 0,
+              "totalScore": 20
+            },
+            {
+              "team": "Gossip Mesh",
+              "availabilityScore": 20,
+              "patchScore": 0,
+              "breakScore": 3,
+              "arenaScore": 0,
+              "totalScore": 15
+            },
+            {
+              "team": "CRDT Mesh",
+              "availabilityScore": 0,
+              "patchScore": 0,
+              "breakScore": 1,
+              "arenaScore": 0,
+              "totalScore": 1
+            }
+          ],
+          "highlights": [
+            "Top builder: Universalist Solo with build score 10.",
+            "Best challenger: Gossip Mesh with 3 successful swap breaks.",
+            "Toughest defense: Universalist Solo allowed 0 successful breaks before fix recovery.",
+            "Arena leader: Universalist Solo earned 0 arena points."
+          ]
+        },
+        "podium": [
+          {
+            "team": "Blackboard Collective",
+            "availabilityScore": 6,
+            "patchScore": 18,
+            "breakScore": 0,
+            "arenaScore": 0,
+            "totalScore": 24
+          },
+          {
+            "team": "Consensus Bundle Collective",
+            "availabilityScore": 20,
+            "patchScore": 0,
+            "breakScore": 3,
+            "arenaScore": 0,
+            "totalScore": 23
+          },
+          {
+            "team": "Universalist Solo",
+            "availabilityScore": 20,
+            "patchScore": 0,
+            "breakScore": 0,
+            "arenaScore": 0,
+            "totalScore": 20
+          }
+        ]
+      }
+    ],
+    "overallStandings": [
+      {
+        "team": "Consensus Bundle Collective",
+        "seasonPoints": 34,
+        "eventWins": 1,
+        "podiums": 5
+      },
+      {
+        "team": "Universalist Solo",
+        "seasonPoints": 32,
+        "eventWins": 2,
+        "podiums": 4
+      },
+      {
+        "team": "Gossip Mesh",
+        "seasonPoints": 32,
+        "eventWins": 1,
+        "podiums": 4
+      },
+      {
+        "team": "Blackboard Collective",
+        "seasonPoints": 24,
+        "eventWins": 1,
+        "podiums": 2
+      },
+      {
+        "team": "CRDT Mesh",
+        "seasonPoints": 13,
+        "eventWins": 0,
+        "podiums": 0
+      }
+    ],
+    "teamCards": [
+      {
+        "strategyId": "universalist_solo",
+        "strategyLabel": "Universalist Solo",
+        "teamName": "Universalist Solo",
+        "archetype": "agent-team",
+        "backstory": "No custom backstory assigned for this run.",
+        "motto": "Ship working code."
+      },
+      {
+        "strategyId": "blackboard_collective",
+        "strategyLabel": "Blackboard Collective",
+        "teamName": "Blackboard Collective",
+        "archetype": "agent-team",
+        "backstory": "No custom backstory assigned for this run.",
+        "motto": "Ship working code."
+      },
+      {
+        "strategyId": "gossip_mesh",
+        "strategyLabel": "Gossip Mesh",
+        "teamName": "Gossip Mesh",
+        "archetype": "agent-team",
+        "backstory": "No custom backstory assigned for this run.",
+        "motto": "Ship working code."
+      },
+      {
+        "strategyId": "crdt_mesh",
+        "strategyLabel": "CRDT Mesh",
+        "teamName": "CRDT Mesh",
+        "archetype": "agent-team",
+        "backstory": "No custom backstory assigned for this run.",
+        "motto": "Ship working code."
+      },
+      {
+        "strategyId": "consensus_bundle_collective",
+        "strategyLabel": "Consensus Bundle Collective",
+        "teamName": "Consensus Bundle Collective",
+        "archetype": "agent-team",
+        "backstory": "No custom backstory assigned for this run.",
+        "motto": "Ship working code."
+      }
+    ],
+    "rivalries": [
+      {
+        "rivalry": "Blackboard Collective vs Gossip Mesh",
+        "totalSwapBreaks": 3
+      },
+      {
+        "rivalry": "Consensus Bundle Collective vs Gossip Mesh",
+        "totalSwapBreaks": 2
+      },
+      {
+        "rivalry": "Blackboard Collective vs Consensus Bundle Collective",
+        "totalSwapBreaks": 1
+      },
+      {
+        "rivalry": "CRDT Mesh vs Gossip Mesh",
+        "totalSwapBreaks": 1
+      },
+      {
+        "rivalry": "Blackboard Collective vs Universalist Solo",
+        "totalSwapBreaks": 0
+      }
+    ]
+  },
+  "personaComparison": null
+}

@@ -58,6 +58,35 @@ export const TEAM_STRATEGIES = [
     ]
   },
   {
+    id: "universalist_solo",
+    label: "Universalist Solo",
+    mode: "build",
+    family: "builder",
+    agentCount: 1,
+    topology: "single-node",
+    taskDistribution: "broadcast_all",
+    memoryModel: "internal notebook",
+    coordinationProtocol: "self-refine across spec, plan, implementation, QA, review, and repair before answering",
+    internalLoop: ["spec", "plan", "implement", "qa", "review", "repair"],
+    designMethod: "single agent handles every role internally before shipping",
+    reasoningStyle: "omnibus self-refinement loop",
+    promptDiscipline: "maximal",
+    decisionRule: "complete every discipline internally before returning a single patch",
+    communicationSchema: ["plan_v1", "code_patch_v1", "review_verdict_v1"],
+    phases: [
+      phase(
+        "universalist",
+        "Universalist Engineer",
+        "Own the entire loop alone: clarify the spec, design the approach, implement it, pressure-test edge cases, review the result, and ship the strongest code you can.",
+        {
+          action: "build_code",
+          outputType: "code",
+          communicationSchema: "code_patch_v1"
+        }
+      )
+    ]
+  },
+  {
     id: "pipeline_five_stage",
     label: "Pipeline Five-Stage",
     mode: "build",
@@ -299,6 +328,172 @@ export const TEAM_STRATEGIES = [
     ]
   },
   {
+    id: "blackboard_collective",
+    label: "Blackboard Collective",
+    mode: "build",
+    family: "builder",
+    agentCount: 6,
+    topology: "decentralized",
+    taskDistribution: "broadcast_all",
+    memoryModel: "shared blackboard",
+    coordinationProtocol: "leaderless blackboard where every peer reads the whole task and contributes the highest-value next delta",
+    designMethod: "all peers inspect the full task and opportunistically update a shared blackboard",
+    reasoningStyle: "blackboard opportunism",
+    promptDiscipline: "shared-state disciplined",
+    decisionRule: "ship only after the shared board covers design, tests, issues, and a repair pass",
+    communicationSchema: ["plan_v1", "code_patch_v1", "adversarial_cases_v1", "review_verdict_v1", "fix_packet_v1"],
+    phases: [
+      phase("peer_alpha", "Peer Alpha", "Read the whole task and add the most important spec and invariant notes to the shared blackboard.", {
+        action: "design",
+        communicationSchema: "plan_v1"
+      }),
+      phase("peer_beta", "Peer Beta", "Read the same task bundle and add milestones or missing edge cases to the shared blackboard.", {
+        action: "plan",
+        communicationSchema: "plan_v1"
+      }),
+      phase("peer_gamma", "Peer Gamma", "Read the blackboard and implement the strongest code candidate implied by the shared notes.", {
+        action: "build_code",
+        outputType: "code",
+        communicationSchema: "code_patch_v1"
+      }),
+      phase("peer_delta", "Peer Delta", "Read the full task and the current blackboard, then add the highest-risk tests.", {
+        action: "qa",
+        communicationSchema: "adversarial_cases_v1"
+      }),
+      phase("peer_epsilon", "Peer Epsilon", "Repair the implementation against the blackboard's tests and issues without waiting for a manager.", {
+        action: "revise_code",
+        outputType: "code_revision",
+        communicationSchema: "fix_packet_v1"
+      }),
+      phase("peer_zeta", "Peer Zeta", "Review the final state of the blackboard and decide whether the collective result is ready to ship.", {
+        action: "review",
+        communicationSchema: "review_verdict_v1"
+      })
+    ]
+  },
+  {
+    id: "gossip_mesh",
+    label: "Gossip Mesh",
+    mode: "build",
+    family: "builder",
+    agentCount: 6,
+    topology: "decentralized",
+    taskDistribution: "broadcast_all",
+    memoryModel: "gossip digest",
+    coordinationProtocol: "epidemic gossip of partial findings until the team converges on a coherent implementation",
+    designMethod: "all peers inspect the full task but only exchange compact gossip digests of what they learned",
+    reasoningStyle: "eventual-consistency convergence",
+    promptDiscipline: "digest-oriented",
+    decisionRule: "ship when the gossip digest converges on stable design, tests, and code concerns",
+    communicationSchema: ["plan_v1", "code_patch_v1", "adversarial_cases_v1", "review_verdict_v1"],
+    phases: [
+      phase("peer_one", "Peer One", "Broadcast the strongest behavioral interpretation you can infer from the full task.", {
+        action: "design",
+        communicationSchema: "plan_v1"
+      }),
+      phase("peer_two", "Peer Two", "Add another independently derived design view and missing edge cases into the gossip stream.", {
+        action: "design",
+        communicationSchema: "plan_v1"
+      }),
+      phase("peer_three", "Peer Three", "Merge the gossip so far into a compact implementation plan.", {
+        action: "plan",
+        communicationSchema: "plan_v1"
+      }),
+      phase("peer_four", "Peer Four", "Implement the strongest code implied by the current gossip digest.", {
+        action: "build_code",
+        outputType: "code",
+        communicationSchema: "code_patch_v1"
+      }),
+      phase("peer_five", "Peer Five", "Read the same task and current digest, then contribute likely failure cases.", {
+        action: "qa",
+        communicationSchema: "adversarial_cases_v1"
+      }),
+      phase("peer_six", "Peer Six", "Review whether the gossip has converged enough for the team to ship.", {
+        action: "review",
+        communicationSchema: "review_verdict_v1"
+      })
+    ]
+  },
+  {
+    id: "crdt_mesh",
+    label: "CRDT Mesh",
+    mode: "build",
+    family: "builder",
+    agentCount: 5,
+    topology: "decentralized",
+    taskDistribution: "broadcast_all",
+    memoryModel: "append-only CRDT hypothesis log",
+    coordinationProtocol: "leaderless merge of monotonic facts, risks, tests, and patches",
+    designMethod: "each peer writes append-only findings that must merge conflict-free into a final solution",
+    reasoningStyle: "monotonic merge",
+    promptDiscipline: "merge-safe",
+    decisionRule: "ship only after the merged log contains no unresolved correctness objections",
+    communicationSchema: ["plan_v1", "code_patch_v1", "adversarial_cases_v1", "review_verdict_v1", "fix_packet_v1"],
+    phases: [
+      phase("replica_alpha", "Replica Alpha", "Append input, output, and invariant facts that must remain true in every merge.", {
+        action: "design",
+        communicationSchema: "plan_v1"
+      }),
+      phase("replica_beta", "Replica Beta", "Append boundary and property-style tests that should survive every merge.", {
+        action: "qa",
+        communicationSchema: "adversarial_cases_v1"
+      }),
+      phase("replica_gamma", "Replica Gamma", "Write the initial implementation from the merged fact log.", {
+        action: "build_code",
+        outputType: "code",
+        communicationSchema: "code_patch_v1"
+      }),
+      phase("replica_delta", "Replica Delta", "Append issues that still violate the merged fact log.", {
+        action: "review",
+        communicationSchema: "review_verdict_v1"
+      }),
+      phase("replica_epsilon", "Replica Epsilon", "Produce a merge-safe revision that resolves the remaining log entries.", {
+        action: "revise_code",
+        outputType: "code_revision",
+        communicationSchema: "fix_packet_v1"
+      })
+    ]
+  },
+  {
+    id: "consensus_bundle_collective",
+    label: "Consensus Bundle Collective",
+    mode: "build",
+    family: "builder",
+    agentCount: 5,
+    topology: "decentralized",
+    taskDistribution: "broadcast_all",
+    memoryModel: "claim ledger",
+    coordinationProtocol: "consensus-based bundle allocation where peers claim the next most valuable contribution and converge through local updates",
+    designMethod: "all peers see the whole task, self-assign the contribution with highest local value, and reconcile through a shared claim ledger",
+    reasoningStyle: "auction-like local consensus",
+    promptDiscipline: "claim-and-merge",
+    decisionRule: "ship after the claim ledger covers design, code, QA, and review without direct manager arbitration",
+    communicationSchema: ["plan_v1", "code_patch_v1", "adversarial_cases_v1", "review_verdict_v1"],
+    phases: [
+      phase("agent_a", "Agent A", "Claim and contribute the most valuable missing design or invariant work.", {
+        action: "design",
+        communicationSchema: "plan_v1"
+      }),
+      phase("agent_b", "Agent B", "Claim and contribute the most valuable missing planning or edge-case work.", {
+        action: "plan",
+        communicationSchema: "plan_v1"
+      }),
+      phase("agent_c", "Agent C", "Claim implementation if it is now the highest-value missing contribution.", {
+        action: "build_code",
+        outputType: "code",
+        communicationSchema: "code_patch_v1"
+      }),
+      phase("agent_d", "Agent D", "Claim the strongest remaining QA or adversarial testing work.", {
+        action: "qa",
+        communicationSchema: "adversarial_cases_v1"
+      }),
+      phase("agent_e", "Agent E", "Claim the final review and decide whether the ledger is complete enough to ship.", {
+        action: "review",
+        communicationSchema: "review_verdict_v1"
+      })
+    ]
+  },
+  {
     id: "breaker_solo",
     label: "Solo Breaker",
     mode: "break",
@@ -408,6 +603,40 @@ export const TEAM_STRATEGIES = [
     ]
   },
   {
+    id: "gossip_breaker_mesh",
+    label: "Gossip Breaker Mesh",
+    mode: "break",
+    family: "breaker",
+    agentCount: 4,
+    topology: "decentralized",
+    taskDistribution: "broadcast_all",
+    memoryModel: "gossip digest",
+    coordinationProtocol: "leaderless exchange of candidate exploits until the counterexample set converges",
+    designMethod: "all peers inspect the whole implementation and gossip concise exploit hypotheses",
+    reasoningStyle: "decentralized exploit convergence",
+    promptDiscipline: "compact exploit sharing",
+    decisionRule: "submit only cases that survive distributed peer scrutiny",
+    communicationSchema: ["adversarial_cases_v1", "review_verdict_v1"],
+    phases: [
+      phase("peer_alpha", "Peer Alpha", "Broadcast the strongest likely weakness in the target implementation.", {
+        action: "analyze",
+        communicationSchema: "adversarial_cases_v1"
+      }),
+      phase("peer_beta", "Peer Beta", "Turn the current gossip into concrete adversarial cases.", {
+        action: "generate_cases",
+        communicationSchema: "adversarial_cases_v1"
+      }),
+      phase("peer_gamma", "Peer Gamma", "Add new counterexamples that exploit a different failure mode.", {
+        action: "generate_cases",
+        communicationSchema: "adversarial_cases_v1"
+      }),
+      phase("peer_delta", "Peer Delta", "Keep only the cases that still look strongest after gossip convergence.", {
+        action: "review_cases",
+        communicationSchema: "review_verdict_v1"
+      })
+    ]
+  },
+  {
     id: "qa_fuzzer",
     label: "QA Fuzzer",
     mode: "test",
@@ -458,6 +687,40 @@ export const TEAM_STRATEGIES = [
         communicationSchema: "adversarial_cases_v1"
       }),
       phase("reviewer", "Reviewer", "Reduce the test mesh to the most diagnostic small set.", {
+        action: "review_cases",
+        communicationSchema: "review_verdict_v1"
+      })
+    ]
+  },
+  {
+    id: "stigmergy_test_hive",
+    label: "Stigmergy Test Hive",
+    mode: "test",
+    family: "tester",
+    agentCount: 4,
+    topology: "decentralized",
+    taskDistribution: "broadcast_all",
+    memoryModel: "shared pheromone board",
+    coordinationProtocol: "stigmergic pickup of under-tested regions via a shared trace board",
+    designMethod: "all peers see the full task and reinforce promising test directions by leaving traces in a shared environment",
+    reasoningStyle: "stigmergic exploration",
+    promptDiscipline: "coverage trail building",
+    decisionRule: "keep tests that attract repeated independent support from the hive",
+    communicationSchema: ["adversarial_cases_v1", "review_verdict_v1"],
+    phases: [
+      phase("scout_one", "Scout One", "Lay down the first test traces around the most obvious contract boundaries.", {
+        action: "analyze",
+        communicationSchema: "adversarial_cases_v1"
+      }),
+      phase("scout_two", "Scout Two", "Follow the strongest traces and extend them into concrete cases.", {
+        action: "generate_cases",
+        communicationSchema: "adversarial_cases_v1"
+      }),
+      phase("scout_three", "Scout Three", "Explore a different branch of the trace board and add diverse edge cases.", {
+        action: "generate_cases",
+        communicationSchema: "adversarial_cases_v1"
+      }),
+      phase("scout_four", "Scout Four", "Cull weak traces and keep only the tests the hive would reinforce again.", {
         action: "review_cases",
         communicationSchema: "review_verdict_v1"
       })

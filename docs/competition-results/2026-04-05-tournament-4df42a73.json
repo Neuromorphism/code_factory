@@ -1,0 +1,116 @@
+{
+  "id": "tournament-4df42a73",
+  "createdAt": "2026-04-05T15:05:47.218Z",
+  "benchmark": {
+    "name": "Synthetic Build Break Tournament",
+    "instanceCount": 5,
+    "metrics": [
+      "resolved_rate",
+      "mean_time_to_completion_seconds",
+      "median_time_to_completion_seconds"
+    ]
+  },
+  "orchestrator": "codex-5.4",
+  "localModelTarget": "gemma4:e4b",
+  "frameworks": [
+    {
+      "id": "universalist_solo",
+      "label": "Universalist Solo"
+    },
+    {
+      "id": "gossip_mesh",
+      "label": "Gossip Mesh"
+    },
+    {
+      "id": "consensus_bundle_collective",
+      "label": "Consensus Bundle Collective"
+    },
+    {
+      "id": "blackboard_collective",
+      "label": "Blackboard Collective"
+    },
+    {
+      "id": "crdt_mesh",
+      "label": "CRDT Mesh"
+    }
+  ],
+  "results": [
+    {
+      "frameworkId": "universalist_solo",
+      "benchmarkCaseId": "normalize-tags",
+      "resolved": true,
+      "durationSeconds": 6
+    },
+    {
+      "frameworkId": "blackboard_collective",
+      "benchmarkCaseId": "normalize-tags",
+      "resolved": false,
+      "durationSeconds": 13
+    },
+    {
+      "frameworkId": "gossip_mesh",
+      "benchmarkCaseId": "normalize-tags",
+      "resolved": true,
+      "durationSeconds": 11
+    },
+    {
+      "frameworkId": "crdt_mesh",
+      "benchmarkCaseId": "normalize-tags",
+      "resolved": false,
+      "durationSeconds": 10
+    },
+    {
+      "frameworkId": "consensus_bundle_collective",
+      "benchmarkCaseId": "normalize-tags",
+      "resolved": true,
+      "durationSeconds": 10
+    }
+  ],
+  "summary": [
+    {
+      "frameworkId": "universalist_solo",
+      "label": "Universalist Solo",
+      "attempts": 1,
+      "resolved": 1,
+      "resolvedRate": 1,
+      "meanTimeToCompletionSeconds": 6,
+      "medianTimeToCompletionSeconds": 6
+    },
+    {
+      "frameworkId": "consensus_bundle_collective",
+      "label": "Consensus Bundle Collective",
+      "attempts": 1,
+      "resolved": 1,
+      "resolvedRate": 1,
+      "meanTimeToCompletionSeconds": 10,
+      "medianTimeToCompletionSeconds": 10
+    },
+    {
+      "frameworkId": "gossip_mesh",
+      "label": "Gossip Mesh",
+      "attempts": 1,
+      "resolved": 1,
+      "resolvedRate": 1,
+      "meanTimeToCompletionSeconds": 11,
+      "medianTimeToCompletionSeconds": 11
+    },
+    {
+      "frameworkId": "crdt_mesh",
+      "label": "CRDT Mesh",
+      "attempts": 1,
+      "resolved": 0,
+      "resolvedRate": 0,
+      "meanTimeToCompletionSeconds": 10,
+      "medianTimeToCompletionSeconds": 10
+    },
+    {
+      "frameworkId": "blackboard_collective",
+      "label": "Blackboard Collective",
+      "attempts": 1,
+      "resolved": 0,
+      "resolvedRate": 0,
+      "meanTimeToCompletionSeconds": 13,
+      "medianTimeToCompletionSeconds": 13
+    }
+  ]
+}

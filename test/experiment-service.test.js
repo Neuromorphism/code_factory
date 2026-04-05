@@ -158,7 +158,7 @@ test("experiment template exposes runtime, challenges, and strategies", () => {
   assert.equal(template.modelRuntime.model, "gemma4:e4b");
   assert.ok(template.tasks.build.includes("token-duel"));
   assert.ok(template.tasks.fix.length >= 2);
-  assert.ok(template.strategies.length >= 12);
+  assert.ok(template.strategies.length >= 18);
 });
 
 test("pilot tournament ranks builder and breaker strategies", async () => {

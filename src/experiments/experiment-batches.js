@@ -42,6 +42,19 @@ export const EXPERIMENT_BATCHES = [
     challengeIds: ["token-duel"]
   },
   {
+    id: "distributed-smoke",
+    label: "Distributed Smoke",
+    builderIds: [
+      "universalist_solo",
+      "blackboard_collective",
+      "gossip_mesh",
+      "crdt_mesh",
+      "consensus_bundle_collective"
+    ],
+    attackerIds: ["gossip_breaker_mesh", "stigmergy_test_hive"],
+    challengeIds: ["normalize-tags"]
+  },
+  {
     id: "persona-cup",
     label: "Persona Cup",
     builderIds: ["pipeline_five_stage", "repair_loop_builder", "jury_red_team_builder"],
