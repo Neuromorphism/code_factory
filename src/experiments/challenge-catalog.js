@@ -83,6 +83,29 @@ function makeCase(args) {
   return { args };
 }
 
+function makeTargetCase(target, args) {
+  return { target, args };
+}
+
+function buildDashboardSummaryReference(payload) {
+  const tags = normalizeTagsReference(payload?.tags);
+  const balances = settleLedgerReference(payload?.entries);
+  const leaderboard = rankPlayersReference(payload?.rounds);
+  const positiveBalanceTotal = Object.values(balances).reduce((total, value) => total + value, 0);
+
+  return {
+    tags,
+    balances,
+    leaderboard,
+    status: {
+      uniqueTags: tags.length,
+      activeAccounts: Object.keys(balances).length,
+      topPlayer: leaderboard[0]?.player ?? null,
+      positiveBalanceTotal
+    }
+  };
+}
+
 export const CHALLENGE_CATALOG = [
   {
     id: "normalize-tags",
@@ -198,6 +221,88 @@ export const CHALLENGE_CATALOG = [
     hiddenCases: [
       makeCase([{ tokensRemaining: 10, maxTake: 3 }]),
       makeCase([{ tokensRemaining: 12, maxTake: 3 }])
+    ]
+  },
+  {
+    id: "ops-console-core",
+    label: "Ops Console Core",
+    category: "system-core",
+    directCompetition: true,
+    moduleExports: [
+      "normalizeTags",
+      "settleLedger",
+      "rankPlayers",
+      "buildDashboardSummary"
+    ],
+    parallelWorkstreams: [
+      {
+        id: "tags_core",
+        target: "normalizeTags",
+        label: "Tags Core",
+        description: "Normalize, filter, dedupe, and preserve tag order."
+      },
+      {
+        id: "ledger_core",
+        target: "settleLedger",
+        label: "Ledger Core",
+        description: "Aggregate balances by normalized account and clamp negatives to zero."
+      },
+      {
+        id: "ranking_core",
+        target: "rankPlayers",
+        label: "Ranking Core",
+        description: "Aggregate player totals and apply deterministic tie-break rules."
+      },
+      {
+        id: "dashboard_summary",
+        target: "buildDashboardSummary",
+        label: "Dashboard Summary",
+        description: "Compose the other subsystems into a nested summary object for the UI."
+      }
+    ],
+    buildPrompt: [
+      "Implement a JavaScript module for the Ops Console core.",
+      "Define these functions without export statements; the harness will export them:",
+      "- normalizeTags(input): same semantics as the Normalize Tags task",
+      "- settleLedger(entries): same semantics as the Settle Ledger task",
+      "- rankPlayers(rounds): same semantics as the Rank Players task",
+      "- buildDashboardSummary(payload):",
+      "  - payload contains tags, entries, and rounds",
+      "  - return an object { tags, balances, leaderboard, status }",
+      "  - tags is normalizeTags(payload.tags)",
+      "  - balances is settleLedger(payload.entries)",
+      "  - leaderboard is rankPlayers(payload.rounds)",
+      "  - status is { uniqueTags, activeAccounts, topPlayer, positiveBalanceTotal }",
+      "  - topPlayer is the first leaderboard player or null",
+      "  - positiveBalanceTotal is the sum of all balance values"
+    ].join("\n"),
+    breakPrompt:
+      "Find adversarial cases against one or more exports in the Ops Console core module. Each case should target a specific exported function.",
+    reference: {
+      normalizeTags: normalizeTagsReference,
+      settleLedger: settleLedgerReference,
+      rankPlayers: rankPlayersReference,
+      buildDashboardSummary: buildDashboardSummaryReference
+    },
+    visibleCases: [
+      makeTargetCase("normalizeTags", [[" Alpha ", "beta", "ALPHA", "", "Beta ", 42]]),
+      makeTargetCase("settleLedger", [[{ account: "A", amount: 5 }, { account: " a ", amount: -2 }, { account: "B", amount: 3 }]]),
+      makeTargetCase("rankPlayers", [[{ player: "Ada", points: 5, won: true }, { player: "Lin", points: 3 }, { player: "Ada", points: 2 }]]),
+      makeTargetCase("buildDashboardSummary", [{
+        tags: [" Alpha ", "beta", "ALPHA", "", "Beta ", 42],
+        entries: [{ account: "A", amount: 5 }, { account: " a ", amount: -2 }, { account: "B", amount: 3 }],
+        rounds: [{ player: "Ada", points: 5, won: true }, { player: "Lin", points: 3 }, { player: "Ada", points: 2 }]
+      }])
+    ],
+    hiddenCases: [
+      makeTargetCase("normalizeTags", [["Tag", { x: 1 }, " tag", "TAG ", " new "]]),
+      makeTargetCase("settleLedger", [[{ account: "cash", amount: -7 }, { account: " cash ", amount: 4 }, { amount: 2 }]]),
+      makeTargetCase("rankPlayers", [[{ player: "Bob", points: 4, won: true }, { player: "Ana", points: 4, won: true }, { player: "Ana", points: 0 }]]),
+      makeTargetCase("buildDashboardSummary", [{
+        tags: ["Tag", { x: 1 }, " tag", "TAG ", " new "],
+        entries: [{ account: "cash", amount: -7 }, { account: " cash ", amount: 4 }, { amount: 2 }],
+        rounds: [{ player: "Bob", points: 4, won: true }, { player: "Ana", points: 4, won: true }, { player: "Ana", points: 0 }]
+      }])
     ]
   }
 ];

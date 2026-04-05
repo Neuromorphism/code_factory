@@ -1,0 +1,116 @@
+{
+  "id": "tournament-4e0e128f",
+  "createdAt": "2026-04-05T18:22:05.170Z",
+  "benchmark": {
+    "name": "Synthetic Build Break Tournament",
+    "instanceCount": 5,
+    "metrics": [
+      "resolved_rate",
+      "mean_time_to_completion_seconds",
+      "median_time_to_completion_seconds"
+    ]
+  },
+  "orchestrator": "codex-5.4",
+  "localModelTarget": "gemma4:e4b",
+  "frameworks": [
+    {
+      "id": "universalist_solo",
+      "label": "Universalist Solo"
+    },
+    {
+      "id": "blackboard_collective",
+      "label": "Blackboard Collective"
+    },
+    {
+      "id": "parallel_clone_swarm",
+      "label": "Parallel Clone Swarm"
+    },
+    {
+      "id": "collab_pod_builder",
+      "label": "Collab Pod Builder"
+    },
+    {
+      "id": "consensus_bundle_collective",
+      "label": "Consensus Bundle Collective"
+    }
+  ],
+  "results": [
+    {
+      "frameworkId": "universalist_solo",
+      "benchmarkCaseId": "ops-console-core",
+      "resolved": false,
+      "durationSeconds": 10
+    },
+    {
+      "frameworkId": "parallel_clone_swarm",
+      "benchmarkCaseId": "ops-console-core",
+      "resolved": false,
+      "durationSeconds": 65
+    },
+    {
+      "frameworkId": "collab_pod_builder",
+      "benchmarkCaseId": "ops-console-core",
+      "resolved": false,
+      "durationSeconds": 73
+    },
+    {
+      "frameworkId": "blackboard_collective",
+      "benchmarkCaseId": "ops-console-core",
+      "resolved": false,
+      "durationSeconds": 30
+    },
+    {
+      "frameworkId": "consensus_bundle_collective",
+      "benchmarkCaseId": "ops-console-core",
+      "resolved": false,
+      "durationSeconds": 16
+    }
+  ],
+  "summary": [
+    {
+      "frameworkId": "universalist_solo",
+      "label": "Universalist Solo",
+      "attempts": 1,
+      "resolved": 0,
+      "resolvedRate": 0,
+      "meanTimeToCompletionSeconds": 10,
+      "medianTimeToCompletionSeconds": 10
+    },
+    {
+      "frameworkId": "consensus_bundle_collective",
+      "label": "Consensus Bundle Collective",
+      "attempts": 1,
+      "resolved": 0,
+      "resolvedRate": 0,
+      "meanTimeToCompletionSeconds": 16,
+      "medianTimeToCompletionSeconds": 16
+    },
+    {
+      "frameworkId": "blackboard_collective",
+      "label": "Blackboard Collective",
+      "attempts": 1,
+      "resolved": 0,
+      "resolvedRate": 0,
+      "meanTimeToCompletionSeconds": 30,
+      "medianTimeToCompletionSeconds": 30
+    },
+    {
+      "frameworkId": "parallel_clone_swarm",
+      "label": "Parallel Clone Swarm",
+      "attempts": 1,
+      "resolved": 0,
+      "resolvedRate": 0,
+      "meanTimeToCompletionSeconds": 65,
+      "medianTimeToCompletionSeconds": 65
+    },
+    {
+      "frameworkId": "collab_pod_builder",
+      "label": "Collab Pod Builder",
+      "attempts": 1,
+      "resolved": 0,
+      "resolvedRate": 0,
+      "meanTimeToCompletionSeconds": 73,
+      "medianTimeToCompletionSeconds": 73
+    }
+  ]
+}

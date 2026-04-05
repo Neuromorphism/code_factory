@@ -11,7 +11,10 @@ function sum(values) {
 }
 
 function caseKey(entry) {
-  return JSON.stringify(entry?.args ?? []);
+  return JSON.stringify({
+    target: entry?.target ?? null,
+    args: entry?.args ?? []
+  });
 }
 
 function dedupeSuccessfulCases(entries) {

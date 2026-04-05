@@ -59,7 +59,8 @@ function createSharedBoard() {
     issues: [],
     attacks: [],
     changes: [],
-    cases: []
+    cases: [],
+    fragments: []
   };
 }
 
@@ -89,6 +90,19 @@ function updateBoard(board, phase, result) {
   board.attacks = pushUniqueEntries(board.attacks, result?.attacks || []);
   board.changes = pushUniqueEntries(board.changes, result?.changes || []);
   board.cases = dedupeCases(board.cases.concat(result?.cases || []));
+
+  if (result?.code && (phase.action === "build_fragment" || result?.target)) {
+    const target = result.target ?? phase.assignment ?? null;
+    if (target) {
+      board.fragments = board.fragments
+        .filter((entry) => entry.target !== target)
+        .concat({
+          target,
+          summary: result.summary ?? phase.role,
+          code: sanitizeCode(result.code)
+        });
+    }
+  }
 }
 
 function formatBoard(board) {
@@ -101,7 +115,8 @@ function formatBoard(board) {
     issues: board.issues,
     attacks: board.attacks,
     changes: board.changes,
-    cases: board.cases
+    cases: board.cases,
+    fragments: board.fragments
   };
 
   const hasContent = Object.values(payload).some((value) => Array.isArray(value) && value.length);
@@ -139,7 +154,10 @@ function formatList(label, entries) {
 }
 
 function caseKey(entry) {
-  return JSON.stringify(entry?.args ?? []);
+  return JSON.stringify({
+    target: entry?.target ?? null,
+    args: entry?.args ?? []
+  });
 }
 
 function dedupeCases(cases) {
@@ -158,6 +176,7 @@ function dedupeCases(cases) {
 
     seen.add(key);
     output.push({
+      target: entry.target,
       args: entry.args,
       why: entry.why ?? entry.reason ?? "diagnostic case"
     });
@@ -166,8 +185,197 @@ function dedupeCases(cases) {
   return output;
 }
 
+function normalizeCandidateCases(challenge, cases) {
+  const validTargets = challenge.moduleExports?.length ? new Set(challenge.moduleExports) : null;
+
+  return dedupeCases(
+    (cases ?? []).flatMap((entry) => {
+      if (!entry || !Array.isArray(entry.args)) {
+        return [];
+      }
+
+      if (!validTargets) {
+        return [
+          {
+            args: entry.args,
+            why: entry.why ?? entry.reason ?? "diagnostic case"
+          }
+        ];
+      }
+
+      const target =
+        typeof entry.target === "string" && validTargets.has(entry.target) ? entry.target : null;
+      if (!target) {
+        return [];
+      }
+
+      return [
+        {
+          target,
+          args: entry.args,
+          why: entry.why ?? entry.reason ?? "diagnostic case"
+        }
+      ];
+    })
+  );
+}
+
 function totalDuration(transcript) {
   return transcript.reduce((total, entry) => total + (entry.result?.durationMs ?? 0), 0);
+}
+
+function cloneBoard(board) {
+  return JSON.parse(JSON.stringify(board));
+}
+
+function groupPhasesByWave(phases) {
+  const groups = [];
+
+  for (const phase of phases) {
+    const key = phase.wave ?? `serial:${phase.id}`;
+    const previous = groups.at(-1);
+
+    if (previous && previous.key === key) {
+      previous.phases.push(phase);
+      continue;
+    }
+
+    groups.push({
+      key,
+      phases: [phase]
+    });
+  }
+
+  return groups;
+}
+
+function getWorkstream(challenge, phase) {
+  if (!phase.assignment) {
+    return null;
+  }
+
+  return challenge.parallelWorkstreams?.find((entry) => entry.id === phase.assignment) ?? null;
+}
+
+function formatWorkstream(challenge, phase) {
+  const workstream = getWorkstream(challenge, phase);
+  if (!workstream) {
+    return "";
+  }
+
+  return [
+    `Assigned workstream: ${workstream.label}.`,
+    `Target export: ${workstream.target}.`,
+    `Workstream description: ${workstream.description}`
+  ].join("\n");
+}
+
+function buildCodeInstruction(challenge, phase) {
+  if (phase.action === "build_fragment") {
+    const workstream = getWorkstream(challenge, phase);
+    if (workstream) {
+      return [
+        `Write only the JavaScript fragment for ${workstream.target}.`,
+        `Define function ${workstream.target} for the assigned workstream.`,
+        "Do not include export statements.",
+        "Assume another agent will integrate your fragment with the rest of the module."
+      ].join(" ");
+    }
+
+    return "Write only a JavaScript fragment for your assigned subsystem. Do not include export statements.";
+  }
+
+  if (challenge.moduleExports?.length) {
+    return [
+      "Write only the JavaScript module body.",
+      `Define these functions: ${challenge.moduleExports.join(", ")}.`,
+      "Do not include export statements; the evaluator will export them.",
+      "Integrate any fragment code from the shared coordination substrate if it looks correct."
+    ].join(" ");
+  }
+
+  return `Write only the JavaScript needed for a function named ${challenge.entryFunction}.`;
+}
+
+function buildRevisionInstruction(challenge) {
+  if (challenge.moduleExports?.length) {
+    return [
+      "Write a full repaired JavaScript module body.",
+      `Define these functions: ${challenge.moduleExports.join(", ")}.`,
+      "Do not include export statements.",
+      "Preserve working behavior across all exports while fixing the confirmed failures."
+    ].join(" ");
+  }
+
+  return `Write a repaired implementation for ${challenge.entryFunction}.`;
+}
+
+function buildCodeSchema(challenge, phase) {
+  if (phase.action === "build_fragment") {
+    return '{"summary":"string","target":"string","code":"function ...","risks":["string"]}';
+  }
+
+  if (challenge.moduleExports?.length) {
+    return '{"summary":"string","code":"function ...\\nfunction ...","risks":["string"]}';
+  }
+
+  return '{"summary":"string","code":"function ...","risks":["string"]}';
+}
+
+function buildRevisionSchema(challenge) {
+  if (challenge.moduleExports?.length) {
+    return '{"summary":"string","code":"function ...\\nfunction ...","changes":["string"]}';
+  }
+
+  return '{"summary":"string","code":"function ...","changes":["string"]}';
+}
+
+function attackCaseSchema(challenge) {
+  if (challenge.moduleExports?.length) {
+    return '{"summary":"string","cases":[{"target":"string","args":[...],"why":"string"}]}';
+  }
+
+  return '{"summary":"string","cases":[{"args":[...],"why":"string"}]}';
+}
+
+function buildAttackAnalysisSchema(challenge) {
+  if (challenge.moduleExports?.length) {
+    return '{"summary":"string","weakPoints":["string"],"cases":[{"target":"string","args":[...],"why":"string"}]}';
+  }
+
+  return '{"summary":"string","weakPoints":["string"],"cases":[{"args":[...],"why":"string"}]}';
+}
+
+function buildReviewInstruction(challenge) {
+  if (challenge.moduleExports?.length) {
+    return "Review the current module for missing exports, broken integration, or subsystem contract violations.";
+  }
+
+  return "Assess the current implementation for correctness, robustness, and maintainability.";
+}
+
+function buildFixInstruction(challenge) {
+  if (challenge.moduleExports?.length) {
+    return "Revise the module to repair failing exports or integration gaps while preserving all required behavior.";
+  }
+
+  return "Revise the implementation to address the strongest concerns while preserving the required behavior.";
+}
+
+function assembleFragmentCode(challenge, board) {
+  if (!board?.fragments?.length) {
+    return "";
+  }
+
+  const targets = challenge.parallelWorkstreams?.length
+    ? challenge.parallelWorkstreams.map((entry) => entry.target)
+    : challenge.moduleExports ?? board.fragments.map((entry) => entry.target);
+  const fragmentMap = new Map(board.fragments.map((entry) => [entry.target, sanitizeCode(entry.code)]));
+
+  return targets
+    .map((target) => fragmentMap.get(target))
+    .filter(Boolean)
+    .join("\n\n");
 }
 
 async function generateJson(client, prompt, fallback = {}) {
@@ -183,6 +391,190 @@ async function generateJson(client, prompt, fallback = {}) {
   }
 }
 
+async function executeBuildPhase({
+  strategy,
+  challenge,
+  client,
+  phase,
+  snapshot,
+  teamProfile
+}) {
+  const boardContext = formatBoard(snapshot.sharedBoard);
+  const workstreamContext = formatWorkstream(challenge, phase);
+  const assembledCode = assembleFragmentCode(challenge, snapshot.sharedBoard);
+  const sharedContext = [
+    `You are the ${phase.role} in a software delivery team.`,
+    formatStrategyContext(strategy, phase),
+    formatPersona(teamProfile, phase),
+    `Challenge: ${challenge.label}`,
+    challenge.buildPrompt,
+    workstreamContext,
+    boardContext
+  ]
+    .filter(Boolean)
+    .join("\n\n");
+
+  if (phase.action === "build_code" || phase.action === "build_fragment") {
+    const assignedTarget = getWorkstream(challenge, phase)?.target;
+    const prompt = jsonBlockPrompt(
+      [
+        sharedContext,
+        snapshot.planSummary ? `Approved plan summary:\n${snapshot.planSummary}` : "",
+        formatList("Known QA concerns:", snapshot.qaNotes),
+        formatList("Reviewer concerns:", snapshot.reviewerNotes),
+        formatList("Adversarial findings:", snapshot.attackNotes),
+        buildCodeInstruction(challenge, phase),
+        "Prefer defensive handling over cleverness."
+      ]
+        .filter(Boolean)
+        .join("\n\n"),
+      buildCodeSchema(challenge, phase)
+    );
+
+    const result = await generateJson(client, prompt, {
+      code: phase.action === "build_code" ? snapshot.currentCode || assembledCode : "",
+      risks: [],
+      target: assignedTarget
+    });
+    if (assignedTarget) {
+      result.target = assignedTarget;
+    }
+    return {
+      phase,
+      result,
+      currentCode:
+        phase.action === "build_code"
+          ? sanitizeCode(result.code || snapshot.currentCode || assembledCode)
+          : snapshot.currentCode
+    };
+  }
+
+  if (phase.action === "revise_code") {
+    const prompt = jsonBlockPrompt(
+      [
+        sharedContext,
+        `Current implementation:\n${snapshot.currentCode}`,
+        formatList("Known QA concerns:", snapshot.qaNotes),
+        formatList("Reviewer concerns:", snapshot.reviewerNotes),
+        formatList("Adversarial findings:", snapshot.attackNotes),
+        buildFixInstruction(challenge),
+        buildRevisionInstruction(challenge)
+      ]
+        .filter(Boolean)
+        .join("\n\n"),
+      buildRevisionSchema(challenge)
+    );
+
+    const result = await generateJson(client, prompt, {
+      code: snapshot.currentCode || assembledCode,
+      changes: []
+    });
+    return {
+      phase,
+      result,
+      currentCode: sanitizeCode(result.code || snapshot.currentCode || assembledCode)
+    };
+  }
+
+  if (phase.action === "design") {
+    const prompt = jsonBlockPrompt(
+      [
+        sharedContext,
+        `Visible examples:\n${JSON.stringify(challenge.visibleCases, null, 2)}`,
+        snapshot.planSummary ? `Prior design notes:\n${snapshot.planSummary}` : ""
+      ]
+        .filter(Boolean)
+        .join("\n\n"),
+      '{"summary":"string","edgeCases":["string"],"design":"string"}'
+    );
+    const result = await generateJson(client, prompt, { design: "", edgeCases: [] });
+    return {
+      phase,
+      result,
+      planSummaryAdd: `${phase.role}: ${result.summary}\nDesign: ${result.design}\n`
+    };
+  }
+
+  if (phase.action === "plan") {
+    const prompt = jsonBlockPrompt(
+      [sharedContext, snapshot.planSummary ? `Prior design notes:\n${snapshot.planSummary}` : ""]
+        .filter(Boolean)
+        .join("\n\n"),
+      '{"summary":"string","milestones":["string"],"risks":["string"]}'
+    );
+    const result = await generateJson(client, prompt, { milestones: [], risks: [] });
+    return {
+      phase,
+      result,
+      planSummaryAdd: `${phase.role}: ${result.summary}\nMilestones: ${(result.milestones || []).join("; ")}\n`
+    };
+  }
+
+  if (phase.action === "qa") {
+    const prompt = jsonBlockPrompt(
+      [
+        sharedContext,
+        `Current implementation:\n${snapshot.currentCode}`,
+        `Visible examples:\n${JSON.stringify(challenge.visibleCases, null, 2)}`,
+        "Identify the highest-risk edge cases or tests."
+      ].join("\n\n"),
+      '{"summary":"string","tests":["string"],"risks":["string"]}'
+    );
+    const result = await generateJson(client, prompt, { tests: [], risks: [] });
+    return {
+      phase,
+      result,
+      qaNotesAdd: [...(result.tests || []), ...(result.risks || [])]
+    };
+  }
+
+  if (phase.action === "review") {
+    const prompt = jsonBlockPrompt(
+      [
+        sharedContext,
+        `Current implementation:\n${snapshot.currentCode}`,
+        formatList("QA concerns:", snapshot.qaNotes),
+        formatList("Adversarial findings:", snapshot.attackNotes),
+        buildReviewInstruction(challenge)
+      ]
+        .filter(Boolean)
+        .join("\n\n"),
+      '{"summary":"string","issues":["string"],"decision":"approve|needs_work"}'
+    );
+    const result = await generateJson(client, prompt, { issues: [], decision: "needs_work" });
+    return {
+      phase,
+      result,
+      reviewerNotesAdd: result.issues || []
+    };
+  }
+
+  if (phase.action === "attack_notes") {
+    const prompt = jsonBlockPrompt(
+      [
+        sharedContext,
+        `Current implementation:\n${snapshot.currentCode}`,
+        "List the strongest likely breakpoints or edge cases."
+      ].join("\n\n"),
+      '{"summary":"string","attacks":["string"]}'
+    );
+    const result = await generateJson(client, prompt, { attacks: [], risks: [] });
+    return {
+      phase,
+      result,
+      attackNotesAdd: result.attacks || []
+    };
+  }
+
+  return {
+    phase,
+    result: {
+      summary: "no-op",
+      durationMs: 0
+    }
+  };
+}
+
 async function runBuildStrategy(strategy, challenge, client, options = {}) {
   const transcript = [];
   const sharedBoard = createSharedBoard();
@@ -193,145 +585,61 @@ async function runBuildStrategy(strategy, challenge, client, options = {}) {
   let currentCode = "";
   const teamProfile = options.teamProfile ?? null;
 
-  for (const phase of strategy.phases) {
-    const boardContext = formatBoard(sharedBoard);
-    const sharedContext = [
-      `You are the ${phase.role} in a software delivery team.`,
-      formatStrategyContext(strategy, phase),
-      formatPersona(teamProfile, phase),
-      `Challenge: ${challenge.label}`,
-      challenge.buildPrompt,
-      boardContext
-    ]
-      .filter(Boolean)
-      .join("\n\n");
+  for (const group of groupPhasesByWave(strategy.phases)) {
+    const snapshot = {
+      planSummary,
+      qaNotes: [...qaNotes],
+      reviewerNotes: [...reviewerNotes],
+      attackNotes: [...attackNotes],
+      currentCode,
+      sharedBoard: cloneBoard(sharedBoard)
+    };
 
-    if (phase.action === "build_code") {
-      const prompt = jsonBlockPrompt(
-        [
-          sharedContext,
-          planSummary ? `Approved plan summary:\n${planSummary}` : "",
-          formatList("Known QA concerns:", qaNotes),
-          formatList("Reviewer concerns:", reviewerNotes),
-          formatList("Adversarial findings:", attackNotes),
-          `Write only the JavaScript needed for a function named ${challenge.entryFunction}.`,
-          "Prefer defensive handling over cleverness."
-        ]
-          .filter(Boolean)
-          .join("\n\n"),
-        '{"summary":"string","code":"function ...","risks":["string"]}'
-      );
+    const phaseResults =
+      group.phases.length > 1
+        ? await Promise.all(
+            group.phases.map((phase) =>
+              executeBuildPhase({
+                strategy,
+                challenge,
+                client,
+                phase,
+                snapshot,
+                teamProfile
+              })
+            )
+          )
+        : [
+            await executeBuildPhase({
+              strategy,
+              challenge,
+              client,
+              phase: group.phases[0],
+              snapshot,
+              teamProfile
+            })
+          ];
 
-      const result = await generateJson(client, prompt, { code: "", risks: [] });
-      currentCode = sanitizeCode(result.code);
-      updateBoard(sharedBoard, phase, result);
-      transcript.push({ phase: phase.id, role: phase.role, action: phase.action, result });
-      continue;
-    }
+    for (const phaseResult of phaseResults) {
+      if (phaseResult.planSummaryAdd) {
+        planSummary += phaseResult.planSummaryAdd;
+      }
 
-    if (phase.action === "revise_code") {
-      const prompt = jsonBlockPrompt(
-        [
-          sharedContext,
-          `Current implementation:\n${currentCode}`,
-          formatList("Known QA concerns:", qaNotes),
-          formatList("Reviewer concerns:", reviewerNotes),
-          formatList("Adversarial findings:", attackNotes),
-          "Revise the implementation to address the strongest concerns while preserving the required behavior."
-        ]
-          .filter(Boolean)
-          .join("\n\n"),
-        '{"summary":"string","code":"function ...","changes":["string"]}'
-      );
+      qaNotes = pushUniqueEntries(qaNotes, phaseResult.qaNotesAdd || []);
+      reviewerNotes = pushUniqueEntries(reviewerNotes, phaseResult.reviewerNotesAdd || []);
+      attackNotes = pushUniqueEntries(attackNotes, phaseResult.attackNotesAdd || []);
 
-      const result = await generateJson(client, prompt, { code: currentCode, changes: [] });
-      currentCode = sanitizeCode(result.code);
-      updateBoard(sharedBoard, phase, result);
-      transcript.push({ phase: phase.id, role: phase.role, action: phase.action, result });
-      continue;
-    }
+      if (typeof phaseResult.currentCode === "string") {
+        currentCode = phaseResult.currentCode;
+      }
 
-    if (phase.action === "design") {
-      const prompt = jsonBlockPrompt(
-        [
-          sharedContext,
-          `Visible examples:\n${JSON.stringify(challenge.visibleCases, null, 2)}`,
-          planSummary ? `Prior design notes:\n${planSummary}` : ""
-        ]
-          .filter(Boolean)
-          .join("\n\n"),
-        '{"summary":"string","edgeCases":["string"],"design":"string"}'
-      );
-      const result = await generateJson(client, prompt, { design: "", edgeCases: [] });
-      planSummary += `${phase.role}: ${result.summary}\nDesign: ${result.design}\n`;
-      updateBoard(sharedBoard, phase, result);
-      transcript.push({ phase: phase.id, role: phase.role, action: phase.action, result });
-      continue;
-    }
-
-    if (phase.action === "plan") {
-      const prompt = jsonBlockPrompt(
-        [sharedContext, planSummary ? `Prior design notes:\n${planSummary}` : ""]
-          .filter(Boolean)
-          .join("\n\n"),
-        '{"summary":"string","milestones":["string"],"risks":["string"]}'
-      );
-      const result = await generateJson(client, prompt, { milestones: [], risks: [] });
-      planSummary += `${phase.role}: ${result.summary}\nMilestones: ${(result.milestones || []).join("; ")}\n`;
-      updateBoard(sharedBoard, phase, result);
-      transcript.push({ phase: phase.id, role: phase.role, action: phase.action, result });
-      continue;
-    }
-
-    if (phase.action === "qa") {
-      const prompt = jsonBlockPrompt(
-        [
-          sharedContext,
-          `Current implementation:\n${currentCode}`,
-          `Visible examples:\n${JSON.stringify(challenge.visibleCases, null, 2)}`,
-          "Identify the highest-risk edge cases or tests."
-        ].join("\n\n"),
-        '{"summary":"string","tests":["string"],"risks":["string"]}'
-      );
-      const result = await generateJson(client, prompt, { tests: [], risks: [] });
-      qaNotes = [...qaNotes, ...(result.tests || []), ...(result.risks || [])];
-      updateBoard(sharedBoard, phase, result);
-      transcript.push({ phase: phase.id, role: phase.role, action: phase.action, result });
-      continue;
-    }
-
-    if (phase.action === "review") {
-      const prompt = jsonBlockPrompt(
-        [
-          sharedContext,
-          `Current implementation:\n${currentCode}`,
-          formatList("QA concerns:", qaNotes),
-          formatList("Adversarial findings:", attackNotes)
-        ]
-          .filter(Boolean)
-          .join("\n\n"),
-        '{"summary":"string","issues":["string"],"decision":"approve|needs_work"}'
-      );
-      const result = await generateJson(client, prompt, { issues: [], decision: "needs_work" });
-      reviewerNotes = [...reviewerNotes, ...(result.issues || [])];
-      updateBoard(sharedBoard, phase, result);
-      transcript.push({ phase: phase.id, role: phase.role, action: phase.action, result });
-      continue;
-    }
-
-    if (phase.action === "attack_notes") {
-      const prompt = jsonBlockPrompt(
-        [
-          sharedContext,
-          `Current implementation:\n${currentCode}`,
-          "List the strongest likely breakpoints or edge cases."
-        ].join("\n\n"),
-        '{"summary":"string","attacks":["string"]}'
-      );
-      const result = await generateJson(client, prompt, { attacks: [], risks: [] });
-      attackNotes = [...attackNotes, ...(result.attacks || [])];
-      updateBoard(sharedBoard, phase, result);
-      transcript.push({ phase: phase.id, role: phase.role, action: phase.action, result });
+      updateBoard(sharedBoard, phaseResult.phase, phaseResult.result);
+      transcript.push({
+        phase: phaseResult.phase.id,
+        role: phaseResult.phase.role,
+        action: phaseResult.phase.action,
+        result: phaseResult.result
+      });
     }
   }
 
@@ -365,7 +673,8 @@ async function runAttackStrategy(strategy, challenge, targetCode, client, option
       formatStrategyContext(strategy, phase),
       formatPersona(teamProfile, phase),
       `Challenge: ${challenge.label}`,
-      challenge.buildPrompt,
+      challenge.breakPrompt,
+      `Spec summary:\n${challenge.buildPrompt}`,
       `Target implementation:\n${targetCode}`,
       `Visible examples:\n${JSON.stringify(challenge.visibleCases, null, 2)}`,
       boardContext
@@ -384,11 +693,12 @@ async function runAttackStrategy(strategy, challenge, targetCode, client, option
         ]
           .filter(Boolean)
           .join("\n\n"),
-        '{"summary":"string","weakPoints":["string"],"cases":[{"args":[...],"why":"string"}]}'
+        buildAttackAnalysisSchema(challenge)
       );
-      const result = await generateJson(client, prompt, { findings: [], risks: [] });
+      const result = await generateJson(client, prompt, { weakPoints: [], cases: [] });
       analysisNotes.push(result.summary, ...(result.weakPoints || []));
-      candidatePool = dedupeCases(candidatePool.concat(result.cases || []));
+      result.cases = normalizeCandidateCases(challenge, result.cases || []);
+      candidatePool = normalizeCandidateCases(challenge, candidatePool.concat(result.cases));
       updateBoard(sharedBoard, phase, result);
       transcript.push({ phase: phase.id, role: phase.role, action: phase.action, result });
       continue;
@@ -406,10 +716,11 @@ async function runAttackStrategy(strategy, challenge, targetCode, client, option
         ]
           .filter(Boolean)
           .join("\n\n"),
-        '{"summary":"string","cases":[{"args":[...],"why":"string"}]}'
+        attackCaseSchema(challenge)
       );
       const result = await generateJson(client, prompt, { cases: [] });
-      candidatePool = dedupeCases(candidatePool.concat(result.cases || []));
+      result.cases = normalizeCandidateCases(challenge, result.cases || []);
+      candidatePool = normalizeCandidateCases(challenge, candidatePool.concat(result.cases));
       updateBoard(sharedBoard, phase, result);
       transcript.push({ phase: phase.id, role: phase.role, action: phase.action, result });
       continue;
@@ -423,10 +734,11 @@ async function runAttackStrategy(strategy, challenge, targetCode, client, option
           `Candidate pool:\n${JSON.stringify(candidatePool, null, 2)}`,
           "Keep only the strongest, most reproducible adversarial cases."
         ].join("\n\n"),
-        '{"summary":"string","cases":[{"args":[...],"why":"string"}]}'
+        attackCaseSchema(challenge)
       );
       const result = await generateJson(client, prompt, { cases: candidatePool, discarded: [] });
-      candidatePool = dedupeCases((result.cases || []).length ? result.cases : candidatePool);
+      result.cases = normalizeCandidateCases(challenge, result.cases || []);
+      candidatePool = result.cases.length ? result.cases : candidatePool;
       updateBoard(sharedBoard, phase, result);
       transcript.push({ phase: phase.id, role: phase.role, action: phase.action, result });
     }
@@ -469,17 +781,21 @@ export async function runFixStrategy(strategy, challenge, client, options = {}) 
       challenge.buildPrompt,
       `Current implementation:\n${currentCode}`,
       `Confirmed failing cases:\n${JSON.stringify(successfulCases, null, 2)}`,
-      `Write a repaired implementation for ${challenge.entryFunction} that preserves the required behavior and fixes the confirmed failures.`
+      buildFixInstruction(challenge),
+      buildRevisionInstruction(challenge)
     ]
       .filter(Boolean)
       .join("\n\n"),
-    '{"summary":"string","code":"function ...","changes":["string"]}'
+    buildRevisionSchema(challenge)
   );
 
   const result = await generateJson(client, prompt, { code: currentCode, changes: [] });
-  const repairedCode = sanitizeCode(result.code);
+  const repairedCode = sanitizeCode(result.code || currentCode);
   const evaluation = await evaluateImplementation(challenge, repairedCode, {
-    extraCases: successfulCases.map((entry) => ({ args: entry.args }))
+    extraCases: successfulCases.map((entry) => ({
+      target: entry.target,
+      args: entry.args
+    }))
   });
 
   return {

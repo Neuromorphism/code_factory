@@ -153,12 +153,213 @@ function settleLedger(entries) {
   }
 }
 
+class ParallelSystemClient extends StubClient {
+  async generate(prompt) {
+    if (prompt.includes("Write only the JavaScript module body.") && prompt.includes("Ops Console Core")) {
+      if (prompt.includes("You are the Integrator")) {
+        throw new Error("integrator timeout");
+      }
+
+      return {
+        summary: "system module",
+        code: `
+function normalizeTags(input) {
+  const seen = new Set();
+  const output = [];
+  for (const value of Array.isArray(input) ? input : []) {
+    if (typeof value !== "string") continue;
+    const normalized = value.trim().toLowerCase();
+    if (!normalized || seen.has(normalized)) continue;
+    seen.add(normalized);
+    output.push(normalized);
+  }
+  return output;
+}
+
+function settleLedger(entries) {
+  const balances = {};
+  for (const entry of Array.isArray(entries) ? entries : []) {
+    if (!entry || typeof entry.account !== "string" || typeof entry.amount !== "number") continue;
+    const account = entry.account.trim().toLowerCase();
+    if (!account) continue;
+    balances[account] = (balances[account] || 0) + entry.amount;
+    if (balances[account] < 0) balances[account] = 0;
+  }
+  return balances;
+}
+
+function rankPlayers(rounds) {
+  const totals = new Map();
+  for (const round of Array.isArray(rounds) ? rounds : []) {
+    if (!round || typeof round.player !== "string" || typeof round.points !== "number") continue;
+    const current = totals.get(round.player) || { player: round.player, points: 0, wins: 0 };
+    current.points += round.points;
+    if (round.won === true) current.wins += 1;
+    totals.set(round.player, current);
+  }
+  return [...totals.values()].sort((left, right) => {
+    if (right.points !== left.points) return right.points - left.points;
+    if (right.wins !== left.wins) return right.wins - left.wins;
+    return left.player.localeCompare(right.player);
+  });
+}
+
+function buildDashboardSummary(payload) {
+  const tags = normalizeTags(payload?.tags);
+  const balances = settleLedger(payload?.entries);
+  const leaderboard = rankPlayers(payload?.rounds);
+  const positiveBalanceTotal = Object.values(balances).reduce((total, value) => total + value, 0);
+
+  return {
+    tags,
+    balances,
+    leaderboard,
+    status: {
+      uniqueTags: tags.length,
+      activeAccounts: Object.keys(balances).length,
+      topPlayer: leaderboard[0]?.player ?? null,
+      positiveBalanceTotal
+    }
+  };
+}
+        `
+      };
+    }
+
+    if (prompt.includes("Target export: normalizeTags.")) {
+      return {
+        summary: "tags fragment",
+        target: "normalizeTags",
+        code: `
+function normalizeTags(input) {
+  const seen = new Set();
+  const output = [];
+  for (const value of Array.isArray(input) ? input : []) {
+    if (typeof value !== "string") continue;
+    const normalized = value.trim().toLowerCase();
+    if (!normalized || seen.has(normalized)) continue;
+    seen.add(normalized);
+    output.push(normalized);
+  }
+  return output;
+}
+        `
+      };
+    }
+
+    if (prompt.includes("Target export: settleLedger.")) {
+      return {
+        summary: "ledger fragment",
+        target: "settleLedger",
+        code: `
+function settleLedger(entries) {
+  const balances = {};
+  for (const entry of Array.isArray(entries) ? entries : []) {
+    if (!entry || typeof entry.account !== "string" || typeof entry.amount !== "number") continue;
+    const account = entry.account.trim().toLowerCase();
+    if (!account) continue;
+    balances[account] = (balances[account] || 0) + entry.amount;
+    if (balances[account] < 0) balances[account] = 0;
+  }
+  return balances;
+}
+        `
+      };
+    }
+
+    if (prompt.includes("Target export: rankPlayers.")) {
+      return {
+        summary: "ranking fragment",
+        target: "rankPlayers",
+        code: `
+function rankPlayers(rounds) {
+  const totals = new Map();
+  for (const round of Array.isArray(rounds) ? rounds : []) {
+    if (!round || typeof round.player !== "string" || typeof round.points !== "number") continue;
+    const current = totals.get(round.player) || { player: round.player, points: 0, wins: 0 };
+    current.points += round.points;
+    if (round.won === true) current.wins += 1;
+    totals.set(round.player, current);
+  }
+  return [...totals.values()].sort((left, right) => {
+    if (right.points !== left.points) return right.points - left.points;
+    if (right.wins !== left.wins) return right.wins - left.wins;
+    return left.player.localeCompare(right.player);
+  });
+}
+        `
+      };
+    }
+
+    if (prompt.includes("Target export: buildDashboardSummary.")) {
+      return {
+        summary: "summary fragment",
+        target: "buildDashboardSummary",
+        code: `
+function buildDashboardSummary(payload) {
+  const tags = normalizeTags(payload?.tags);
+  const balances = settleLedger(payload?.entries);
+  const leaderboard = rankPlayers(payload?.rounds);
+  const positiveBalanceTotal = Object.values(balances).reduce((total, value) => total + value, 0);
+
+  return {
+    tags,
+    balances,
+    leaderboard,
+    status: {
+      uniqueTags: tags.length,
+      activeAccounts: Object.keys(balances).length,
+      topPlayer: leaderboard[0]?.player ?? null,
+      positiveBalanceTotal
+    }
+  };
+}
+        `
+      };
+    }
+
+    if (prompt.includes("Generate concise adversarial test cases")) {
+      return {
+        summary: "attack",
+        cases: [
+          {
+            target: "buildDashboardSummary",
+            args: [{
+              tags: [" Alpha ", "ALPHA"],
+              entries: [{ account: "A", amount: 5 }, { account: " a ", amount: -2 }],
+              rounds: [{ player: "Ada", points: 3, won: true }]
+            }],
+            why: "module teams should preserve nested summary integrity"
+          }
+        ]
+      };
+    }
+
+    return super.generate(prompt);
+  }
+}
+
+class MisroutedFragmentClient extends ParallelSystemClient {
+  async generate(prompt) {
+    const result = await super.generate(prompt);
+    if (result?.target && prompt.includes("Target export:")) {
+      return {
+        ...result,
+        target: "settleLedger"
+      };
+    }
+
+    return result;
+  }
+}
+
 test("experiment template exposes runtime, challenges, and strategies", () => {
   const template = createExperimentTemplate();
   assert.equal(template.modelRuntime.model, "gemma4:e4b");
   assert.ok(template.tasks.build.includes("token-duel"));
+  assert.ok(template.tasks.build.includes("ops-console-core"));
   assert.ok(template.tasks.fix.length >= 2);
-  assert.ok(template.strategies.length >= 18);
+  assert.ok(template.strategies.length >= 20);
 });
 
 test("pilot tournament ranks builder and breaker strategies", async () => {
@@ -233,4 +434,41 @@ test("pilot tournament runs fix rounds after successful breaks", async () => {
   assert.equal(tournament.fixResults.length, 1);
   assert.equal(tournament.fixResults[0].recoveredCases, 1);
   assert.equal(tournament.summaries.fixers[0].strategyId, "repair_loop_builder");
+});
+
+test("pilot tournament supports parallel multi-export system challenges", async () => {
+  const tournament = await runPilotTournament({
+    builderIds: ["universalist_solo", "parallel_clone_swarm"],
+    attackerIds: [],
+    challengeIds: ["ops-console-core"],
+    client: new ParallelSystemClient(),
+    enableFixRounds: false
+  });
+
+  assert.equal(tournament.buildResults.length, 2);
+  assert.equal(tournament.swapResults.length, 2);
+  assert.equal(
+    tournament.buildResults.every((result) => result.evaluation.passedHidden === result.evaluation.totalHidden),
+    true
+  );
+  assert.equal(
+    tournament.buildResults.find((result) => result.strategyId === "parallel_clone_swarm").transcript.some(
+      (entry) => entry.action === "build_fragment"
+    ),
+    true
+  );
+});
+
+test("parallel fragment assembly uses harness workstream ownership instead of model-reported targets", async () => {
+  const tournament = await runPilotTournament({
+    builderIds: ["parallel_clone_swarm"],
+    attackerIds: [],
+    challengeIds: ["ops-console-core"],
+    client: new MisroutedFragmentClient(),
+    enableFixRounds: false
+  });
+
+  assert.equal(tournament.buildResults.length, 1);
+  assert.equal(tournament.buildResults[0].evaluation.compiled, true);
+  assert.equal(tournament.buildResults[0].evaluation.passedVisible, tournament.buildResults[0].evaluation.totalVisible);
 });

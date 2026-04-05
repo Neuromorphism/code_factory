@@ -35,6 +35,8 @@ body {
 .grid,
 .panel,
 .summary-card,
+.overview-card,
+.overview-node,
 .work-item,
 .artifact-card,
 .plan-card,
@@ -198,13 +200,26 @@ button.ghost {
   gap: 12px;
 }
 
+.overview-board {
+  display: grid;
+  gap: 16px;
+}
+
+.overview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
 .summary-card,
 .protocol-pill,
 .work-item,
 .artifact-card,
 .plan-card,
 .event-card,
-.competition-card {
+.competition-card,
+.overview-card,
+.overview-node {
   border-radius: 18px;
   background: rgba(255, 255, 255, 0.65);
   padding: 16px;
@@ -216,7 +231,11 @@ button.ghost {
 .event-card p,
 .competition-card p,
 .work-item p,
-.protocol-pill small {
+.protocol-pill small,
+.overview-card p,
+.overview-card small,
+.overview-node p,
+.overview-node small {
   margin: 0;
 }
 
@@ -224,6 +243,23 @@ button.ghost {
   display: block;
   margin-top: 10px;
   font-size: 1.35rem;
+}
+
+.overview-card {
+  display: grid;
+  gap: 10px;
+  min-height: 148px;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.76), rgba(250, 241, 230, 0.9));
+}
+
+.overview-card strong {
+  font-size: 1.45rem;
+  line-height: 1.1;
+}
+
+.overview-card small {
+  color: var(--muted);
+  line-height: 1.45;
 }
 
 .protocol-strip {
@@ -247,6 +283,46 @@ button.ghost {
   max-height: 580px;
   overflow: auto;
   padding-right: 6px;
+}
+
+.overview-rail {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.overview-node {
+  display: grid;
+  gap: 10px;
+  border: 1px solid rgba(24, 34, 41, 0.08);
+}
+
+.overview-node header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.overview-node h3 {
+  font-size: 1rem;
+}
+
+.overview-node small {
+  color: var(--muted);
+  font-family: "Courier New", Courier, monospace;
+}
+
+.overview-node.active {
+  background: linear-gradient(145deg, rgba(217, 111, 67, 0.16), rgba(255, 255, 255, 0.82));
+}
+
+.overview-node.complete {
+  background: linear-gradient(145deg, rgba(42, 123, 95, 0.16), rgba(255, 255, 255, 0.82));
+}
+
+.overview-node.blocked {
+  background: linear-gradient(145deg, rgba(183, 121, 31, 0.18), rgba(255, 255, 255, 0.84));
 }
 
 .work-item header,

@@ -28,7 +28,9 @@ function phase(id, role, objective, options = {}) {
     objective,
     action: options.action ?? "note",
     outputType: options.outputType,
-    communicationSchema: options.communicationSchema ?? null
+    communicationSchema: options.communicationSchema ?? null,
+    assignment: options.assignment ?? null,
+    wave: options.wave ?? null
   };
 }
 
@@ -488,6 +490,137 @@ export const TEAM_STRATEGIES = [
         communicationSchema: "adversarial_cases_v1"
       }),
       phase("agent_e", "Agent E", "Claim the final review and decide whether the ledger is complete enough to ship.", {
+        action: "review",
+        communicationSchema: "review_verdict_v1"
+      })
+    ]
+  },
+  {
+    id: "parallel_clone_swarm",
+    label: "Parallel Clone Swarm",
+    mode: "build",
+    family: "builder",
+    agentCount: 8,
+    topology: "parallel-specialist-copies",
+    taskDistribution: "partitioned_plus_shared_spec",
+    memoryModel: "shared fragment board",
+    coordinationProtocol: "planner broadcasts the system contract, clone workers implement separate workstreams in parallel, integrator merges the fragments",
+    designMethod: "parallel workstream fragments with a final integrator pass",
+    reasoningStyle: "parallel clone execution",
+    promptDiscipline: "shared-contract",
+    decisionRule: "ship after the integrator, QA, and reviewer agree the merged module is coherent",
+    communicationSchema: ["plan_v1", "code_patch_v1", "adversarial_cases_v1", "review_verdict_v1"],
+    phases: [
+      phase("spec_writer", "Spec Writer", "Clarify the module contract, required exports, and integration risks.", {
+        action: "design",
+        communicationSchema: "plan_v1"
+      }),
+      phase("planner", "Planner", "Break the system into parallel workstreams and integration constraints.", {
+        action: "plan",
+        communicationSchema: "plan_v1"
+      }),
+      phase("clone_tags", "Clone Worker Tags", "Implement the tags subsystem fragment in parallel with the other clone workers.", {
+        action: "build_fragment",
+        communicationSchema: "code_patch_v1",
+        assignment: "tags_core",
+        wave: "parallel_build"
+      }),
+      phase("clone_ledger", "Clone Worker Ledger", "Implement the ledger subsystem fragment in parallel with the other clone workers.", {
+        action: "build_fragment",
+        communicationSchema: "code_patch_v1",
+        assignment: "ledger_core",
+        wave: "parallel_build"
+      }),
+      phase("clone_ranking", "Clone Worker Ranking", "Implement the ranking subsystem fragment in parallel with the other clone workers.", {
+        action: "build_fragment",
+        communicationSchema: "code_patch_v1",
+        assignment: "ranking_core",
+        wave: "parallel_build"
+      }),
+      phase("clone_summary", "Clone Worker Summary", "Implement the dashboard-summary fragment in parallel with the other clone workers.", {
+        action: "build_fragment",
+        communicationSchema: "code_patch_v1",
+        assignment: "dashboard_summary",
+        wave: "parallel_build"
+      }),
+      phase("integrator", "Integrator", "Merge the fragment board into one coherent JavaScript module.", {
+        action: "build_code",
+        outputType: "code",
+        communicationSchema: "code_patch_v1"
+      }),
+      phase("qa_tester", "QA / Tester", "Pressure-test the integrated module and look for integration failures between workstreams.", {
+        action: "qa",
+        communicationSchema: "adversarial_cases_v1"
+      }),
+      phase("reviewer", "Reviewer", "Review the merged module for cross-workstream regressions and missing exports.", {
+        action: "review",
+        communicationSchema: "review_verdict_v1"
+      })
+    ]
+  },
+  {
+    id: "collab_pod_builder",
+    label: "Collab Pod Builder",
+    mode: "build",
+    family: "builder",
+    agentCount: 9,
+    topology: "parallel-pods",
+    taskDistribution: "specialized_parallel_pods",
+    memoryModel: "pod brief plus integration board",
+    coordinationProtocol: "specialized pods own different subsystems in parallel and coordinate through an integration brief",
+    designMethod: "specialized pods with final integration and repair",
+    reasoningStyle: "parallel pods plus integration loop",
+    promptDiscipline: "pod-specialized",
+    decisionRule: "ship after pod output is integrated, tested, and repaired once",
+    communicationSchema: ["plan_v1", "code_patch_v1", "adversarial_cases_v1", "review_verdict_v1", "fix_packet_v1"],
+    phases: [
+      phase("spec_writer", "Spec Writer", "Define the module contract and the seams between the parallel pods.", {
+        action: "design",
+        communicationSchema: "plan_v1"
+      }),
+      phase("planner", "Planner", "Assign pod ownership and state the integration constraints.", {
+        action: "plan",
+        communicationSchema: "plan_v1"
+      }),
+      phase("data_pod", "Data Pod", "Own the tag-normalization pod workstream.", {
+        action: "build_fragment",
+        communicationSchema: "code_patch_v1",
+        assignment: "tags_core",
+        wave: "pod_build"
+      }),
+      phase("finance_pod", "Finance Pod", "Own the ledger pod workstream.", {
+        action: "build_fragment",
+        communicationSchema: "code_patch_v1",
+        assignment: "ledger_core",
+        wave: "pod_build"
+      }),
+      phase("ranking_pod", "Ranking Pod", "Own the ranking pod workstream.", {
+        action: "build_fragment",
+        communicationSchema: "code_patch_v1",
+        assignment: "ranking_core",
+        wave: "pod_build"
+      }),
+      phase("summary_pod", "Summary Pod", "Own the dashboard-summary pod workstream.", {
+        action: "build_fragment",
+        communicationSchema: "code_patch_v1",
+        assignment: "dashboard_summary",
+        wave: "pod_build"
+      }),
+      phase("integrator", "Integrator", "Assemble the pod outputs into the final system module.", {
+        action: "build_code",
+        outputType: "code",
+        communicationSchema: "code_patch_v1"
+      }),
+      phase("red_team", "Red Team", "Look for integration failures or cross-pod assumptions that break behavior.", {
+        action: "attack_notes",
+        communicationSchema: "adversarial_cases_v1"
+      }),
+      phase("repair_lead", "Repair Lead", "Patch integration defects exposed by the red-team pass.", {
+        action: "revise_code",
+        outputType: "code_revision",
+        communicationSchema: "fix_packet_v1"
+      }),
+      phase("reviewer", "Reviewer", "Decide if the pod-integrated system is actually shippable.", {
         action: "review",
         communicationSchema: "review_verdict_v1"
       })

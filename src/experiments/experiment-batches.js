@@ -55,6 +55,19 @@ export const EXPERIMENT_BATCHES = [
     challengeIds: ["normalize-tags"]
   },
   {
+    id: "parallel-systems-smoke",
+    label: "Parallel Systems Smoke",
+    builderIds: [
+      "universalist_solo",
+      "parallel_clone_swarm",
+      "collab_pod_builder",
+      "blackboard_collective",
+      "consensus_bundle_collective"
+    ],
+    attackerIds: ["breaker_solo", "gossip_breaker_mesh", "break_squad", "test_mesh"],
+    challengeIds: ["ops-console-core"]
+  },
+  {
     id: "persona-cup",
     label: "Persona Cup",
     builderIds: ["pipeline_five_stage", "repair_loop_builder", "jury_red_team_builder"],

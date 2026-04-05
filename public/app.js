@@ -45,6 +45,18 @@ function formatValue(value) {
   return String(value ?? "");
 }
 
+function escapeHtml(value) {
+  return String(value ?? "").replace(/[&<>"']/g, (character) => (
+    {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;"
+    }[character]
+  ));
+}
+
 function formToPayload(form) {
   const data = new FormData(form);
   return Object.fromEntries(data.entries());
@@ -52,7 +64,10 @@ function formToPayload(form) {
 
 function populateProjectTypes() {
   projectTypeSelect.innerHTML = state.projectTypes
-    .map((projectType) => `<option value="${projectType.id}">${projectType.label}</option>`)
+    .map(
+      (projectType) =>
+        `<option value="${escapeHtml(projectType.id)}">${escapeHtml(projectType.label)}</option>`
+    )
     .join("");
 }
 
@@ -60,14 +75,18 @@ function populateBackends() {
   backendSelect.innerHTML = state.backends
     .map(
       (backend) =>
-        `<option value="${backend.id}">${backend.label}${backend.available ? "" : " (planned)"}</option>`
+        `<option value="${escapeHtml(backend.id)}">${escapeHtml(backend.label)}${
+          backend.available ? "" : " (planned)"
+        }</option>`
     )
     .join("");
 }
 
 function populateSessionSelect() {
   sessionSelect.innerHTML = state.sessions
-    .map((session) => `<option value="${session.id}">${session.systemName}</option>`)
+    .map(
+      (session) => `<option value="${escapeHtml(session.id)}">${escapeHtml(session.systemName)}</option>`
+    )
     .join("");
 
   if (!state.session && state.sessions[0]) {
@@ -87,7 +106,9 @@ function populateSyntheticUsers() {
     .concat(
       scenarios.map(
         (scenario) =>
-          `<option value="${scenario.id}">${scenario.label} · ${scenario.complexity}</option>`
+          `<option value="${escapeHtml(scenario.id)}">${escapeHtml(scenario.label)} · ${escapeHtml(
+            scenario.complexity
+          )}</option>`
       )
     )
     .join("");
@@ -132,8 +153,8 @@ function renderSummary() {
     .map(
       ([label, value]) => `
         <article class="summary-card" data-testid="summary-card">
-          <p>${label}</p>
-          <strong>${value}</strong>
+          <p>${escapeHtml(label)}</p>
+          <strong>${escapeHtml(value)}</strong>
         </article>
       `
     )
@@ -143,12 +164,127 @@ function renderSummary() {
     .map(
       (role) => `
         <div class="protocol-pill" data-testid="protocol-pill">
-          <span>${role.label}</span>
-          <small>${role.objective}</small>
+          <span>${escapeHtml(role.label)}</span>
+          <small>${escapeHtml(role.objective)}</small>
         </div>
       `
     )
     .join("");
+}
+
+function roleLabel(roleId) {
+  return state.workflowProtocol.find((role) => role.id === roleId)?.label || roleId || "Idle";
+}
+
+function renderOverview() {
+  const container = document.querySelector("#overview-board");
+  if (!state.session) {
+    container.innerHTML = "";
+    return;
+  }
+
+  const activeItem =
+    state.session.items.find((item) => item.id === state.session.currentItemId) ||
+    state.session.items.find((item) => item.status === "active") ||
+    null;
+  const nextQueuedItem =
+    state.session.items.find((item) => item.status === "queued") ||
+    state.session.items.find((item) => item.id !== activeItem?.id && item.status !== "complete") ||
+    null;
+  const activeRole = activeItem?.roles.find((role) => role.status === "running") || null;
+  const activeRoleIndex = activeItem && activeRole
+    ? activeItem.roles.findIndex((role) => role.role === activeRole.role)
+    : -1;
+  const nextRole =
+    (activeItem && activeRoleIndex >= 0
+      ? activeItem.roles.slice(activeRoleIndex + 1).find((role) => role.status !== "complete")
+      : null) ||
+    activeItem?.roles.find((role) => role.status !== "complete") ||
+    nextQueuedItem?.roles.find((role) => role.status !== "complete") ||
+    null;
+  const latestEvent = state.session.events[state.session.events.length - 1] || null;
+  const focusValue = activeItem
+    ? activeItem.title
+    : state.session.status === "draft"
+      ? "Ready to start"
+      : state.session.status === "complete"
+        ? "Plan complete"
+        : state.session.status;
+  const focusDetail = activeItem
+    ? activeRole
+      ? `${roleLabel(activeRole.role)} is running on work item ${activeItem.order}.`
+      : `${activeItem.status} · ${activeItem.progress}% complete`
+    : state.session.status === "draft"
+      ? nextQueuedItem
+        ? `Next queued item: ${nextQueuedItem.title}`
+        : "Create a session to begin orchestration."
+      : state.session.status === "complete"
+        ? "All work items completed the strict role sequence."
+        : "No active work item is currently running.";
+  const cards = [
+    {
+      label: "Current focus",
+      value: focusValue,
+      detail: focusDetail
+    },
+    {
+      label: "Next handoff",
+      value: nextRole ? roleLabel(nextRole.role) : "Plan complete",
+      detail: nextQueuedItem
+        ? `Next queued item: ${nextQueuedItem.title}`
+        : activeItem
+          ? `Current branch plan: ${activeItem.branch.name}`
+          : "No queued work."
+    },
+    {
+      label: "Plan health",
+      value: `${state.session.summary.completedItems}/${state.session.summary.totalItems} complete`,
+      detail: `${state.session.status} · ${state.session.summary.activeRoles} active roles · ${
+        state.session.summary.overallProgress
+      }% overall progress`
+    },
+    {
+      label: "Latest event",
+      value: latestEvent?.type || "Waiting",
+      detail: latestEvent?.message || "No orchestration events yet."
+    }
+  ];
+
+  const railMarkup = state.session.items
+    .map((item) => {
+      const currentRole = item.roles.find((role) => role.status === "running");
+      return `
+        <article class="overview-node ${item.status}" data-testid="overview-node">
+          <header>
+            <p class="work-item-order">Item ${escapeHtml(item.order)}</p>
+            <strong>${escapeHtml(item.progress)}%</strong>
+          </header>
+          <h3>${escapeHtml(item.title)}</h3>
+          <p>${escapeHtml(item.goal)}</p>
+          <small>${escapeHtml(currentRole ? roleLabel(currentRole.role) : item.status)}</small>
+        </article>
+      `;
+    })
+    .join("");
+
+  container.innerHTML = `
+    <div class="overview-grid">
+      ${cards
+        .map(
+          (card) => `
+            <article class="overview-card" data-testid="overview-card">
+              <p>${escapeHtml(card.label)}</p>
+              <strong>${escapeHtml(card.value)}</strong>
+              <small>${escapeHtml(card.detail)}</small>
+            </article>
+          `
+        )
+        .join("")}
+    </div>
+    <div class="overview-rail">
+      ${railMarkup}
+    </div>
+  `;
 }
 
 function renderWorkItems() {
@@ -164,8 +300,8 @@ function renderWorkItems() {
         .map(
           (role) => `
             <li class="role-chip role-${role.status}">
-              <span>${role.label}</span>
-              <small>${role.status}</small>
+              <span>${escapeHtml(role.label)}</span>
+              <small>${escapeHtml(role.status)}</small>
             </li>
           `
         )
@@ -175,17 +311,17 @@ function renderWorkItems() {
         <article class="work-item ${item.status}" data-testid="work-item">
           <header>
             <div>
-              <p class="work-item-order">Work item ${item.order}</p>
-              <h3>${item.title}</h3>
+              <p class="work-item-order">Work item ${escapeHtml(item.order)}</p>
+              <h3>${escapeHtml(item.title)}</h3>
             </div>
-            <strong>${item.progress}%</strong>
+            <strong>${escapeHtml(item.progress)}%</strong>
           </header>
-          <p>${item.goal}</p>
+          <p>${escapeHtml(item.goal)}</p>
           <div class="progress-track">
             <span class="progress-bar" style="width:${item.progress}%"></span>
           </div>
-          <p class="mono">${item.branch.command}</p>
-          <p class="mono">${item.workspace.command || "Workspace not prepared yet."}</p>
+          <p class="mono">${escapeHtml(item.branch.command)}</p>
+          <p class="mono">${escapeHtml(item.workspace.command || "Workspace not prepared yet.")}</p>
           <ul class="role-list">${roleMarkup}</ul>
         </article>
       `;
@@ -208,7 +344,7 @@ function renderArtifacts() {
       if (!artifact) {
         return `
           <article class="artifact-card artifact-empty">
-            <h3>${roleId}</h3>
+            <h3>${escapeHtml(roleId)}</h3>
             <p>No structured handoff yet.</p>
           </article>
         `;
@@ -216,9 +352,9 @@ function renderArtifacts() {
 
       return `
         <article class="artifact-card">
-          <h3>${artifact.title}</h3>
-          <p>${artifact.summary}</p>
-          <pre>${formatValue(artifact.data)}</pre>
+          <h3>${escapeHtml(artifact.title)}</h3>
+          <p>${escapeHtml(artifact.summary)}</p>
+          <pre>${escapeHtml(formatValue(artifact.data))}</pre>
         </article>
       `;
     })
@@ -226,8 +362,8 @@ function renderArtifacts() {
 
   container.innerHTML = `
     <div class="artifact-intro">
-      <h3 data-testid="artifact-item-title">${activeItem.title}</h3>
-      <p>${activeItem.goal}</p>
+      <h3 data-testid="artifact-item-title">${escapeHtml(activeItem.title)}</h3>
+      <p>${escapeHtml(activeItem.goal)}</p>
     </div>
     ${artifactMarkup}
   `;
@@ -245,11 +381,11 @@ function renderPrPlan() {
       (entry) => `
         <article class="plan-card" data-testid="pr-plan-entry">
           <div>
-            <p class="work-item-order">PR ${entry.sequence}</p>
-            <h3>${entry.prTitle}</h3>
+            <p class="work-item-order">PR ${escapeHtml(entry.sequence)}</p>
+            <h3>${escapeHtml(entry.prTitle)}</h3>
           </div>
-          <p class="mono">${entry.branchName}</p>
-          <p>${entry.requiredRoles.join(" -> ")}</p>
+          <p class="mono">${escapeHtml(entry.branchName)}</p>
+          <p>${escapeHtml(entry.requiredRoles.join(" -> "))}</p>
         </article>
       `
     )
@@ -270,11 +406,11 @@ function renderEvents() {
       (event) => `
         <article class="event-card" data-testid="event-entry">
           <div class="event-meta">
-            <strong>#${event.sequence}</strong>
-            <span>${event.type}</span>
-            <span>${new Date(event.createdAt).toLocaleTimeString()}</span>
+            <strong>#${escapeHtml(event.sequence)}</strong>
+            <span>${escapeHtml(event.type)}</span>
+            <span>${escapeHtml(new Date(event.createdAt).toLocaleTimeString())}</span>
           </div>
-          <p>${event.message || "No message"}</p>
+          <p>${escapeHtml(event.message || "No message")}</p>
         </article>
       `
     )
@@ -300,14 +436,16 @@ function renderCompetitionBoard() {
     ? `
       <article class="competition-card">
         <p class="work-item-order">Latest benchmark</p>
-        <h3>${latestCompetition.id}</h3>
-        <p>${latestCompetition.benchmark.name}</p>
+        <h3>${escapeHtml(latestCompetition.id)}</h3>
+        <p>${escapeHtml(latestCompetition.benchmark.name)}</p>
         <ul class="leaderboard-list">
           ${(latestCompetition.summary || [])
             .slice(0, 4)
             .map(
               (entry) =>
-                `<li><strong>${entry.label}</strong><span>${Math.round(entry.resolvedRate * 100)}% resolved · ${entry.meanTimeToCompletionSeconds}s mean</span></li>`
+                `<li><strong>${escapeHtml(entry.label)}</strong><span>${escapeHtml(
+                  `${Math.round(entry.resolvedRate * 100)}% resolved · ${entry.meanTimeToCompletionSeconds}s mean`
+                )}</span></li>`
             )
             .join("")}
         </ul>
@@ -319,8 +457,8 @@ function renderCompetitionBoard() {
     ? `
       <article class="competition-card">
         <p class="work-item-order">Latest tournament</p>
-        <h3>${latestExperiment.batchId}</h3>
-        <p>${latestExperiment.league?.style?.label || "League"} · personas ${
+        <h3>${escapeHtml(latestExperiment.batchId)}</h3>
+        <p>${escapeHtml(latestExperiment.league?.style?.label || "League")} · personas ${
           latestExperiment.enablePersonas ? "on" : "off"
         }</p>
         <ul class="leaderboard-list">
@@ -334,7 +472,7 @@ function renderCompetitionBoard() {
                 entry.totalTimeSeconds ??
                 entry.solved ??
                 0;
-              return `<li><strong>${entry.team}</strong><span>${score}</span></li>`;
+              return `<li><strong>${escapeHtml(entry.team)}</strong><span>${escapeHtml(score)}</span></li>`;
             })
             .join("")}
         </ul>
@@ -346,13 +484,15 @@ function renderCompetitionBoard() {
     ? `
       <article class="competition-card">
         <p class="work-item-order">Grand circuit</p>
-        <h3>${latestExperiment.season.circuitName}</h3>
+        <h3>${escapeHtml(latestExperiment.season.circuitName)}</h3>
         <ul class="leaderboard-list">
           ${latestExperiment.season.overallStandings
             .slice(0, 4)
             .map(
               (entry) =>
-                `<li><strong>${entry.team}</strong><span>${entry.seasonPoints} pts · ${entry.eventWins} wins</span></li>`
+                `<li><strong>${escapeHtml(entry.team)}</strong><span>${escapeHtml(
+                  `${entry.seasonPoints} pts · ${entry.eventWins} wins`
+                )}</span></li>`
             )
             .join("")}
         </ul>
@@ -366,7 +506,9 @@ function renderCompetitionBoard() {
         <p class="work-item-order">Highlights</p>
         <h3>Live readout</h3>
         <ul class="highlight-list">
-          ${latestExperiment.league.highlights.map((highlight) => `<li>${highlight}</li>`).join("")}
+          ${latestExperiment.league.highlights
+            .map((highlight) => `<li>${escapeHtml(highlight)}</li>`)
+            .join("")}
         </ul>
       </article>
     `
@@ -377,6 +519,7 @@ function renderCompetitionBoard() {
 
 function render() {
   renderSummary();
+  renderOverview();
   renderWorkItems();
   renderArtifacts();
   renderPrPlan();
